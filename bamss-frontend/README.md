@@ -14,3 +14,4 @@ npm start
 ```
 firebase deploy
 ```
+Remote URL: https://bamss-url.web.app
