@@ -2,6 +2,7 @@
 
 ## Build
 ```
+chmod +x gradlew  # Only once
 ./gradlew build
 ```
 
