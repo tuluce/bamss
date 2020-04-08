@@ -1,4 +1,4 @@
-package net.bamss.bamss;
+package net.bamss.bamss.models;
 
 public class Greeting {
 
