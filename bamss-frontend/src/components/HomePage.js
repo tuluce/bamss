@@ -1,9 +1,9 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import logo from '../resources/logo.svg';
+import '../style/App.css';
 import { Button, FormControl } from 'react-bootstrap';
 
-function App() {
+function HomePage() {
   return (
     <div className="App">
       <header className="App-header">
@@ -14,9 +14,10 @@ function App() {
         <FormControl id="basic-url" aria-describedby="basic-addon3" style={{maxWidth: 300}}/>
         <br/>
         <Button variant="primary">Shorten</Button>
+        <br/>
       </header>
     </div>
   );
 }
 
-export default App;
+export default HomePage;
