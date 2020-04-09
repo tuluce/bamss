@@ -2,8 +2,6 @@ package net.bamss.bamssauth.controllers;
 
 import java.util.Map;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;

@@ -5,8 +5,12 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.mongodb.client.MongoDatabase;
+
+import net.bamss.bamssauth.connections.MongoConnection;
 
 public class AuthUtils {
+  private static final MongoDatabase db = MongoConnection.getMongoDatabase();
   private static final String CRYPTO_SECRET = "BamssSecret";
   private static final String CRYPTO_HEADER = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9";
   private static final int CRYPTO_SIGNATURE_LEN = 43;
@@ -50,5 +54,10 @@ public class AuthUtils {
     } catch (JWTVerificationException exception) {
       return null;
     }
+  }
+
+  public static boolean checkQuota(String username) {
+    db.getCollection("user");
+    return true;
   }
 }

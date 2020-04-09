@@ -22,16 +22,15 @@ public class ValidateController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
+		String username;
 		if (token != null) {
-			String username = AuthUtils.validateToken(token);
-			if (username != null) {
-				return new ResponseEntity<>(new Validation(username), HttpStatus.OK);
-			}
+			username = AuthUtils.validateToken(token);
 		} else {
-			String username = AuthUtils.validateApiKey(apiKey);
-			if (username != null) {
-				return new ResponseEntity<>(new Validation(username), HttpStatus.OK);
-			}
+			username = AuthUtils.validateApiKey(apiKey);
+		}
+		if (username != null) {
+			boolean hasQuota = AuthUtils.checkQuota(username);
+			return new ResponseEntity<>(new Validation(username, hasQuota), HttpStatus.OK);
 		}
 		
 		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
