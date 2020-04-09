@@ -7,6 +7,7 @@ import java.util.Map;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.bson.Document;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,18 +27,15 @@ public class SignupController {
 		String username = body.get("username");
 		String password = body.get("password");
 		String accountType = body.get("account_type");
-
+		String passwordHash = DigestUtils.sha256Hex(password);
 		MongoCollection<Document> collection = db.getCollection("user");
-
 		Document newUser = new Document()
 			.append("email", email)
 			.append("username", username)
-			.append("password", password)
+			.append("password_hash", passwordHash)
 			.append("account_type", accountType)
 			.append("url_creations", new ArrayList<Date>());
-
 		collection.insertOne(newUser);
-
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 }
