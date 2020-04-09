@@ -1,5 +1,7 @@
 package net.bamss.bamssauth.controllers;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import com.mongodb.client.MongoCollection;
@@ -12,11 +14,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.bamss.bamssauth.connections.MongoConnection;;
+import net.bamss.bamssauth.connections.MongoConnection;
 
 @RestController
 public class SignupController {
-	
 	private static final MongoDatabase db = MongoConnection.getMongoDatabase();
 	
 	@PutMapping("/user")
@@ -32,7 +33,8 @@ public class SignupController {
 			.append("email", email)
 			.append("username", username)
 			.append("password", password)
-			.append("account_type", accountType);
+			.append("account_type", accountType)
+			.append("url_creations", new ArrayList<Date>());
 
 		collection.insertOne(newUser);
 

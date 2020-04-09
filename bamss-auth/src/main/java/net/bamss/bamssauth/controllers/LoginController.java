@@ -20,7 +20,6 @@ import net.bamss.bamssauth.connections.MongoConnection;
 
 @RestController
 public class LoginController {
-	
 	private static final MongoDatabase db = MongoConnection.getMongoDatabase();
 	
 	@PostMapping("/user")
