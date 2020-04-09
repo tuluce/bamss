@@ -12,7 +12,7 @@ public class MongoConnection {
   private static void createInstance() {
     MongoClientURI uri = new MongoClientURI(System.getenv("MONGODB_URI"));
     MongoClient mongoClient = new MongoClient(uri);
-    db = mongoClient.getDatabase(System.getenv("MONGODB_DB"));
+    db = mongoClient.getDatabase(uri.getDatabase());
   }
 
   public static MongoDatabase getMongoDatabase() {
