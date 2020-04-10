@@ -45,16 +45,20 @@ public class ShortenController {
 			validation = AuthConnection.validateApiKey(apiKey);
 		}
 
-		if (validation != null && validation.getHasQuota()) {
-			String creator = validation.getUsername();
-			MongoCollection<Document> collection = db.getCollection("urls");
-			Document newUrl = new Document()
-				.append("url", originalUrl)
-				.append("key", key)
-				.append("creator", creator)
-				.append("expireDate", expireDate);
-			collection.insertOne(newUrl);
-			return new ResponseEntity<>(new ShortenResult(key), HttpStatus.CREATED);
+		if (validation != null) {
+			if (validation.getHasQuota()) {
+				String creator = validation.getUsername();
+				MongoCollection<Document> collection = db.getCollection("urls");
+				Document newUrl = new Document()
+					.append("url", originalUrl)
+					.append("key", key)
+					.append("creator", creator)
+					.append("expireDate", expireDate);
+				collection.insertOne(newUrl);
+				return new ResponseEntity<>(new ShortenResult(key), HttpStatus.CREATED);
+			} else {
+				return new ResponseEntity<>(HttpStatus.TOO_MANY_REQUESTS);
+			}
 		}
 
 		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

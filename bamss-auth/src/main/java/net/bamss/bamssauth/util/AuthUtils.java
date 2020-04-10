@@ -11,10 +11,10 @@ import net.bamss.bamssauth.connections.MongoConnection;
 
 public class AuthUtils {
   private static final MongoDatabase db = MongoConnection.getMongoDatabase();
-  private static final String CRYPTO_SECRET = "BamssSecret";
-  private static final String CRYPTO_HEADER = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9";
-  private static final int CRYPTO_SIGNATURE_LEN = 43;
+  private static final String CRYPTO_SECRET = System.getenv("CRYPTO_SECRET");
+  private static final String CRYPTO_HEADER = System.getenv("CRYPTO_HEADER");
   private static final Algorithm CRYPTO_ALGORITHM = Algorithm.HMAC256(CRYPTO_SECRET);
+  private static final int CRYPTO_SIGNATURE_LEN = 43;
 
   public static String getToken(String username) {
     String token = JWT.create()
