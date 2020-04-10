@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.bamss.bamssanalytics.util.DatabaseUtils;
+
 @RestController
 public class EventController {
 	@PostMapping("/event")
@@ -19,6 +21,9 @@ public class EventController {
       String platform = (String) body.get("platform");
       String locale = (String) body.get("locale");
       String os = (String) body.get("os");
+      DatabaseUtils.insertEvent(eventType, accountType, key, platform, locale, os);
+    } else {
+      DatabaseUtils.insertEvent(eventType, accountType);
     }
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
