@@ -27,7 +27,6 @@ public class AuthUtils {
     String token = JWT.create()
       .withSubject(username)
       .sign(CRYPTO_ALGORITHM);
-    System.out.println(token);
     String apiKey = token.substring(CRYPTO_HEADER.length()).replaceAll("\\.", "");
     return apiKey;
   }
@@ -47,7 +46,6 @@ public class AuthUtils {
       String tokenBody = apiKey.substring(0, apiKey.length() - CRYPTO_SIGNATURE_LEN);
       String tokenSignature = apiKey.substring(apiKey.length() - CRYPTO_SIGNATURE_LEN);
       String token = CRYPTO_HEADER + "." + tokenBody + "." + tokenSignature;
-      System.out.println(token);
       JWTVerifier verifier = JWT.require(CRYPTO_ALGORITHM).build();
       DecodedJWT jwt = verifier.verify(token);
       return jwt.getSubject();
