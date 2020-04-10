@@ -11,7 +11,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class HttpConnection {
-  public static HashMap<String,String> post(String url, HashMap<String,String> jsonMap) {
+  public static HashMap<String, Object> post(String url, HashMap<String, Object> jsonMap) {
     try {
       MediaType JSON_TYPE = MediaType.get("application/json; charset=utf-8");
       ObjectMapper objectMapper = new ObjectMapper();
@@ -24,7 +24,7 @@ public class HttpConnection {
           .build();
       try (Response response = client.newCall(request).execute()) {
         String responseString = response.body().string();
-        HashMap<String,String> responseMap = objectMapper.readValue(responseString, HashMap.class);
+        HashMap<String, Object> responseMap = objectMapper.readValue(responseString, HashMap.class);
         return responseMap;
       }
     } catch (Exception exception) {

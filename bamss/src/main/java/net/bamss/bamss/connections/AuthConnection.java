@@ -8,14 +8,14 @@ public class AuthConnection {
   private static String AUTH_SERVER = System.getenv("AUTH_SERVER");
 
   private static Validation validateEntity(String authEntity, String entityType) {
-    HashMap<String, String> jsonMap = new HashMap<>();
+    HashMap<String, Object> jsonMap = new HashMap<>();
     jsonMap.put(entityType, authEntity);
-    HashMap<String, String> jsonResponse = HttpConnection.post(AUTH_SERVER + "/validate", jsonMap);
+    HashMap<String, Object> jsonResponse = HttpConnection.post(AUTH_SERVER + "/validate", jsonMap);
     if (jsonResponse == null) {
       return null;
     }
-    String username = jsonResponse.get("username");
-    boolean hasQuota = Boolean.parseBoolean(jsonResponse.get("hasQuota"));
+    String username = (String) jsonResponse.get("username");
+    Boolean hasQuota = (Boolean) jsonResponse.get("hasQuota");
     return new Validation(username, hasQuota);
   }
 

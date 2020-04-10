@@ -22,7 +22,7 @@ public class ShortenController {
 	private static final MongoDatabase db = MongoConnection.getMongoDatabase();
 
 	@PostMapping("/shorten")
-	public ResponseEntity<ShortenResult> shorten(@RequestBody Map<String,String> body) {
+	public ResponseEntity<ShortenResult> shorten(@RequestBody Map<String, String> body) {
 		String token = body.get("token");
 		String apiKey = body.get("api_key");
 		String originalUrl = body.get("original_url");
