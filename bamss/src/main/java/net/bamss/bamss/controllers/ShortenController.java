@@ -6,6 +6,7 @@ import com.mongodb.client.MongoDatabase;
 import net.bamss.bamss.connections.AuthConnection;
 import net.bamss.bamss.connections.KeygenConnection;
 import net.bamss.bamss.connections.MongoConnection;
+import net.bamss.bamss.connections.RedisConnection;
 import net.bamss.bamss.models.ShortenResult;
 import net.bamss.bamss.models.Validation;
 
@@ -13,6 +14,7 @@ import org.bson.Document;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import redis.clients.jedis.Jedis;
 
 import java.time.Instant;
 import java.util.Map;
@@ -20,6 +22,7 @@ import java.util.Map;
 @RestController
 public class ShortenController {
 	private static final MongoDatabase db = MongoConnection.getMongoDatabase();
+	private static final Jedis cache = RedisConnection.getResource();
 
 	@PostMapping("/shorten")
 	public ResponseEntity<ShortenResult> shorten(@RequestBody Map<String, String> body) {

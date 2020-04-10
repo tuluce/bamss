@@ -17,6 +17,7 @@ dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	compile 'com.squareup.okhttp3:okhttp:4.5.0'
 	compile 'com.fasterxml.jackson.core:jackson-databind:2.11.0.rc1'
+	compile 'redis.clients:jedis:3.2.0'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
