@@ -1,7 +1,5 @@
 package net.bamss.bamssauth.controllers;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
 
 import com.mongodb.client.MongoCollection;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.bamss.bamssauth.connections.MongoConnection;
+import net.bamss.bamssauth.models.QuotaStatus;
 
 @RestController
 public class SignupController {
@@ -34,7 +33,7 @@ public class SignupController {
 			.append("username", username)
 			.append("password_hash", passwordHash)
 			.append("account_type", accountType)
-			.append("url_creations", new ArrayList<Date>());
+			.append("quota_status", new QuotaStatus(0, null).getDocument());
 		collection.insertOne(newUser);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
