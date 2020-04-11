@@ -20,7 +20,7 @@ public class QuotaUtils {
   private static final int STANDART_QUOTA = Integer.parseInt(System.getenv("STANDART_QUOTA"));
   private static final int BUSINESS_QUOTA = Integer.parseInt(System.getenv("BUSINESS_QUOTA"));
 
-  public static boolean checkQuota(String username) {
+  public static int getQuota(String username) {
     MongoCollection<Document> collection = db.getCollection("user");
     Document result = collection.find(Filters.eq("username", username)).first();
     String accountType = (String) result.get("account_type");
@@ -31,9 +31,9 @@ public class QuotaUtils {
     if (!isSameDay(lastUsage, now)) {
       Bson update = Updates.set("quota_status", new QuotaStatus(0, null).getDocument());
       collection.updateOne(Filters.eq("username", username), update);
-      return true;
+      return getMaxQuota(accountType);
     }
-    return usageCount < getQuota(accountType);
+    return getMaxQuota(accountType) - usageCount;
   }
 
   public static void useQuota(String username) {
@@ -46,7 +46,7 @@ public class QuotaUtils {
     collection.updateOne(Filters.eq("username", username), update);
   }
 
-  private static int getQuota(String accountType) {
+  private static int getMaxQuota(String accountType) {
     if (accountType.equals("standart")) {
       return STANDART_QUOTA;
     }

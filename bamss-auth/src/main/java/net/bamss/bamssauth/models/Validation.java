@@ -2,18 +2,18 @@ package net.bamss.bamssauth.models;
 
 public class Validation {
 	private final String username;
-	private final boolean hasQuota;
+	private final int quota;
 
-	public Validation(String username, boolean hasQuota) {
+	public Validation(String username, int quota) {
 		this.username = username;
-		this.hasQuota = hasQuota;
+		this.quota = quota;
 	}
 
 	public String getUsername() {
 		return username;
 	}
 
-	public boolean getHasQuota() {
-		return hasQuota;
+	public int getQuota() {
+		return quota;
 	}
 }

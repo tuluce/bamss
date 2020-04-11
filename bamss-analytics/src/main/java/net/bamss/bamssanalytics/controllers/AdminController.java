@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.bamss.bamssanalytics.connections.AuthConnection;
 import net.bamss.bamssanalytics.models.AdminAnalytics;
 import net.bamss.bamssanalytics.util.DatabaseUtils;
 
@@ -20,7 +21,7 @@ public class AdminController {
     long endDateTs = Long.parseLong("" + body.get("end_date"));
     long resolution = Long.parseLong("" + body.get("resolution"));
 
-    if (adminKey.equals("admin_key")) {
+    if (AuthConnection.validateAdminKey(adminKey)) {
       AdminAnalytics result = DatabaseUtils.getAdminLevelAnalytics(startDateTs, endDateTs, resolution);
       return new ResponseEntity<>(result, HttpStatus.OK);
     }

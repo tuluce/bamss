@@ -15,8 +15,8 @@ public class AuthConnection {
       return null;
     }
     String username = (String) jsonResponse.get("username");
-    Boolean hasQuota = (Boolean) jsonResponse.get("hasQuota");
-    return new Validation(username, hasQuota);
+    int quota = (int) jsonResponse.get("quota");
+    return new Validation(username, quota);
   }
 
   public static Validation validateToken(String token) {

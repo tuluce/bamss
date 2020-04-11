@@ -7,6 +7,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 public class AuthUtils {
+  private static final String ADMIN_KEY = System.getenv("ADMIN_KEY");
   private static final String CRYPTO_SECRET = System.getenv("CRYPTO_SECRET");
   private static final String CRYPTO_HEADER = System.getenv("CRYPTO_HEADER");
   private static final Algorithm CRYPTO_ALGORITHM = Algorithm.HMAC256(CRYPTO_SECRET);
@@ -48,5 +49,9 @@ public class AuthUtils {
     } catch (JWTVerificationException exception) {
       return null;
     }
+  }
+
+  public static boolean validateAdminKey(String adminKey) {
+    return ADMIN_KEY.equals(adminKey);
   }
 }

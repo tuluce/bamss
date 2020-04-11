@@ -49,7 +49,7 @@ public class ShortenController {
 		final String accountType = (token != null) ? "standart" : "business";
 
 		if (validation != null) {
-			if (validation.getHasQuota()) {
+			if (validation.getQuota() > 0) {
 				String creator = validation.getUsername();
 				MongoCollection<Document> collection = db.getCollection("urls");
 				Document newUrl = new Document()

@@ -23,4 +23,8 @@ public class AuthConnection {
   public static String validateApiKey(String apiKey) {
     return validateEntity(apiKey, "api_key");
   }
+
+  public static boolean validateAdminKey(String adminKey) {
+    return validateEntity(adminKey, "admin_key").equals("admin");
+  }
 }

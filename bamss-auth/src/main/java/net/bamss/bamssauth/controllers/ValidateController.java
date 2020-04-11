@@ -18,28 +18,33 @@ public class ValidateController {
 	public ResponseEntity<Validation> validate(@RequestBody Map<String, Object> body) {
 		String token = (String) body.get("token");
 		String apiKey = (String) body.get("api_key");
+		String adminKey = (String) body.get("admin_key");
 		Boolean useQuota = (Boolean) body.get("use_quota");
 		
 		if (useQuota == null) {
 			useQuota = false;
 		}
 
-		if ((token == null && apiKey == null) || (token != null && apiKey != null)) {
+		if (token == null && apiKey == null && adminKey == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		
-		String username;
+		String username = null;
 		if (token != null) {
 			username = AuthUtils.validateToken(token);
-		} else {
+		} else if (apiKey != null) {
 			username = AuthUtils.validateApiKey(apiKey);
+		} else if (adminKey != null) {
+			if (AuthUtils.validateAdminKey(adminKey)) {
+				return new ResponseEntity<>(new Validation("admin", 1), HttpStatus.OK);
+			}
 		}
 		if (username != null) {
-			boolean hasQuota = QuotaUtils.checkQuota(username);
-			if (hasQuota && useQuota) {
+			int quota = QuotaUtils.getQuota(username);
+			if (quota > 0 && useQuota) {
 				QuotaUtils.useQuota(username);
 			}
-			return new ResponseEntity<>(new Validation(username, hasQuota), HttpStatus.OK);
+			return new ResponseEntity<>(new Validation(username, quota), HttpStatus.OK);
 		}
 		
 		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
