@@ -1,6 +1,7 @@
 package net.bamss.bamssauth.controllers;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.bamss.bamssauth.connections.AnalyticsConnection;
 import net.bamss.bamssauth.connections.MongoConnection;
 import net.bamss.bamssauth.models.QuotaStatus;
 
@@ -35,6 +37,9 @@ public class SignupController {
 			.append("account_type", accountType)
 			.append("quota_status", new QuotaStatus(0, null).getDocument());
 		collection.insertOne(newUser);
+		CompletableFuture.runAsync(() -> {
+			AnalyticsConnection.recordSignup(accountType);
+		});
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 }

@@ -1,6 +1,7 @@
 package net.bamss.bamssauth.controllers;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -18,6 +19,7 @@ import net.bamss.bamssauth.models.BusinessAuth;
 import net.bamss.bamssauth.models.BaseAuth;
 import net.bamss.bamssauth.models.StandartAuth;
 import net.bamss.bamssauth.util.AuthUtils;
+import net.bamss.bamssauth.connections.AnalyticsConnection;
 import net.bamss.bamssauth.connections.MongoConnection;
 
 @RestController
@@ -39,6 +41,9 @@ public class LoginController {
     String realPasswordHash = String.valueOf(result.get("password_hash"));
     if (realPasswordHash.equals(passwordHash)) {
       String accountType = String.valueOf(result.get("account_type"));
+      CompletableFuture.runAsync(() -> {
+        AnalyticsConnection.recordLogin(accountType);
+      });
       if (accountType.equals("standart")) {
         String token = AuthUtils.getToken(username);
         return new ResponseEntity<>(new StandartAuth(token), HttpStatus.OK);
