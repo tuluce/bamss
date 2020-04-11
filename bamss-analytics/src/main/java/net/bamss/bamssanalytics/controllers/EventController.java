@@ -15,15 +15,15 @@ public class EventController {
 	@PostMapping("/event")
 	public ResponseEntity<Object> recordEvent(@RequestBody Map<String, Object> body) {
 		String eventType = (String) body.get("event_type");
-    String accountType = (String) body.get("account_type");
     if (eventType.equals("redirect")) {
       String key = (String) body.get("key");
       String platform = (String) body.get("platform");
       String locale = (String) body.get("locale");
       String os = (String) body.get("os");
-      DatabaseUtils.insertEvent(eventType, accountType, key, platform, locale, os);
+      DatabaseUtils.insertUserEvent(eventType, key, platform, locale, os);
     } else {
-      DatabaseUtils.insertEvent(eventType, accountType);
+      String accountType = (String) body.get("account_type");
+      DatabaseUtils.insertAdminEvent(eventType, accountType);
     }
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

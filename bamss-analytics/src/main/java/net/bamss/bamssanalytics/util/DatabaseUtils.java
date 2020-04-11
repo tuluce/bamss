@@ -1,9 +1,16 @@
 package net.bamss.bamssanalytics.util;
 
 import java.sql.Connection;
+import java.sql.Date;
+import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.bamss.bamssanalytics.connections.PostgreConnection;
+import net.bamss.bamssanalytics.models.UserAnalytics;
 
 public class DatabaseUtils {
   private static Connection db = PostgreConnection.getDatabase();
@@ -21,12 +28,15 @@ public class DatabaseUtils {
         + "os VARCHAR (16));"
       );
       st.close();
+      Statement st2 = db.createStatement();
+      st2.execute("SET TIMEZONE='Europe/Istanbul';");
+      st2.close();
     } catch (Exception exception) {
       exception.printStackTrace();
     }
   }
 
-  public static void insertEvent(String eventType, String accountType,
+  private static void insertEvent(String eventType, String accountType,
       String key, String platform, String locale, String os) {
     try {
       Statement st = db.createStatement();
@@ -41,7 +51,46 @@ public class DatabaseUtils {
     }
   }
 
-  public static void insertEvent(String eventType, String accountType) {
+  public static void insertUserEvent(String eventType,
+      String key, String platform, String locale, String os) {
+    insertEvent(eventType, null, key, platform, locale, os);
+  }
+
+  public static void insertAdminEvent(String eventType, String accountType) {
     insertEvent(eventType, accountType, null, null, null, null);
+  }
+
+  private static String formatDate(long dateTs) {
+    Timestamp timestamp = new Timestamp(dateTs);  
+    Date date = new Date(timestamp.getTime());  
+    String pattern = "yyyy-MM-dd HH:mm:ss";
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+    String dateString = simpleDateFormat.format(date);
+    return dateString;
+  }
+
+  public static UserAnalytics getUserLevelAnalytics(String username, long startDateTs, long endDateTs) {
+    try {
+      String startDate = formatDate(startDateTs);
+      String endDate = formatDate(endDateTs);
+      Statement st = db.createStatement();
+      ResultSet rs = st.executeQuery("SELECT * FROM events WHERE event_date "
+        + String.format("BETWEEN '%s' AND '%s'", startDate, endDate)
+      );
+      UserAnalytics analytics = new UserAnalytics();
+      while (rs.next()) {
+        String key = rs.getString("key");
+        analytics.addAnalytic(key, "platform", rs.getString("platform"));
+        analytics.addAnalytic(key, "locale", rs.getString("locale"));
+        analytics.addAnalytic(key, "os", rs.getString("os"));
+        analytics.addAnalytic(key, "total", "total");
+      }
+      rs.close();
+      st.close();
+      return analytics;
+    } catch (Exception exception) {
+      exception.printStackTrace();
+    }
+    return null;
   }
 }
