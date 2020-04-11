@@ -6,8 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import net.bamss.bamssanalytics.connections.PostgreConnection;
 import net.bamss.bamssanalytics.models.UserAnalytics;
@@ -69,13 +68,14 @@ public class DatabaseUtils {
     return dateString;
   }
 
-  public static UserAnalytics getUserLevelAnalytics(String username, long startDateTs, long endDateTs) {
+  public static UserAnalytics getUserLevelAnalytics(List<String> keys, long startDateTs, long endDateTs) {
     try {
       String startDate = formatDate(startDateTs);
       String endDate = formatDate(endDateTs);
       Statement st = db.createStatement();
-      ResultSet rs = st.executeQuery("SELECT * FROM events WHERE event_date "
-        + String.format("BETWEEN '%s' AND '%s'", startDate, endDate)
+      ResultSet rs = st.executeQuery("SELECT * FROM events WHERE "
+        + String.format("key IN %s AND ", formatKeys(keys))
+        + String.format("event_date BETWEEN '%s' AND '%s'", startDate, endDate)
       );
       UserAnalytics analytics = new UserAnalytics();
       while (rs.next()) {
@@ -92,5 +92,20 @@ public class DatabaseUtils {
       exception.printStackTrace();
     }
     return null;
+  }
+
+  private static String formatKeys(List<String> keys) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("(");
+    for (int i = 0; i < keys.size(); i++) {
+      sb.append("'");
+      sb.append(keys.get(i));
+      sb.append("'");
+      if (i < keys.size() - 1) {
+        sb.append(",");
+      }
+    }
+    sb.append(")");
+    return sb.toString();
   }
 }

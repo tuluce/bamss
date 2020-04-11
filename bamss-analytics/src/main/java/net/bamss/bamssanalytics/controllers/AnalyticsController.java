@@ -1,5 +1,6 @@
 package net.bamss.bamssanalytics.controllers;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ public class AnalyticsController {
     String apiKey = (String) body.get("api_key");
     String startDateTs = (String) body.get("start_date");
     String endDateTs = (String) body.get("end_date");
+    List<String> keys = (List<String>) body.get("keys");
 
     String username = null;
 		if (token != null) {
@@ -31,7 +33,7 @@ public class AnalyticsController {
     if (username != null) {
       long startDateTsLong = Long.parseLong(startDateTs);
       long endDateTsLong = Long.parseLong(endDateTs);
-      UserAnalytics result = DatabaseUtils.getUserLevelAnalytics(username, startDateTsLong, endDateTsLong);
+      UserAnalytics result = DatabaseUtils.getUserLevelAnalytics(keys, startDateTsLong, endDateTsLong);
       return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
