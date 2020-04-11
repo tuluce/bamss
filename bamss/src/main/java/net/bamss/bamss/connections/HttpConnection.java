@@ -24,6 +24,9 @@ public class HttpConnection {
           .build();
       try (Response response = client.newCall(request).execute()) {
         String responseString = response.body().string();
+        if (responseString.isEmpty()) {
+          return null;
+        }
         HashMap<String, Object> responseMap = objectMapper.readValue(responseString, HashMap.class);
         return responseMap;
       }
