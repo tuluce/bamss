@@ -25,6 +25,6 @@ public class AuthConnection {
   }
 
   public static boolean validateAdminKey(String adminKey) {
-    return validateEntity(adminKey, "admin_key").equals("admin");
+    return "admin".equals(validateEntity(adminKey, "admin_key"));
   }
 }

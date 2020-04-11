@@ -10,6 +10,7 @@ public class AuthConnection {
   private static Validation validateEntity(String authEntity, String entityType) {
     HashMap<String, Object> jsonMap = new HashMap<>();
     jsonMap.put(entityType, authEntity);
+    jsonMap.put("use_quota", true);
     HashMap<String, Object> jsonResponse = HttpConnection.post(AUTH_SERVER + "/validate", jsonMap);
     if (jsonResponse == null) {
       return null;
