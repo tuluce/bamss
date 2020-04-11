@@ -28,6 +28,10 @@ public class AuthUtils {
     return apiKey;
   }
 
+  public static String getAdminKey() {
+    return ADMIN_KEY;
+  }
+
   public static String validateToken(String token) {
     try {
       JWTVerifier verifier = JWT.require(CRYPTO_ALGORITHM).build();

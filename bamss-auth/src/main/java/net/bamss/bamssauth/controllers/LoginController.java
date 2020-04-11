@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.bamss.bamssauth.models.BusinessAuth;
+import net.bamss.bamssauth.models.AdminAuth;
 import net.bamss.bamssauth.models.BaseAuth;
 import net.bamss.bamssauth.models.StandartAuth;
 import net.bamss.bamssauth.util.AuthUtils;
@@ -50,6 +51,9 @@ public class LoginController {
       } else if (accountType.equals("business")) {
         String apiKey = AuthUtils.getApiKey(username);
         return new ResponseEntity<>(new BusinessAuth(apiKey), HttpStatus.OK);
+      } else if (accountType.equals("admin")) {
+        String adminKey = AuthUtils.getAdminKey();
+        return new ResponseEntity<>(new AdminAuth(adminKey), HttpStatus.OK);
       }
     }
 
