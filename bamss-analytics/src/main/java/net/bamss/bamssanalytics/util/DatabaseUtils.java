@@ -31,6 +31,9 @@ public class DatabaseUtils {
       Statement st2 = db.createStatement();
       st2.execute("SET TIMEZONE='Europe/Istanbul';");
       st2.close();
+      Statement st3 = db.createStatement();
+      st3.execute("CREATE INDEX IF NOT EXISTS event_date_index ON events(event_date);");
+      st3.close();
     } catch (Exception exception) {
       exception.printStackTrace();
     }
