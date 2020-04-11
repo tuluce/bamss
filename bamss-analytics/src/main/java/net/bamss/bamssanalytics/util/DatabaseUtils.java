@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import net.bamss.bamssanalytics.connections.PostgreConnection;
+import net.bamss.bamssanalytics.models.AdminAnalytics;
 import net.bamss.bamssanalytics.models.UserAnalytics;
 
 public class DatabaseUtils {
@@ -94,6 +95,32 @@ public class DatabaseUtils {
     return null;
   }
 
+  public static AdminAnalytics getAdminLevelAnalytics(long startDateTs, long endDateTs, long resolution) {
+    try {
+      String startDate = formatDate(startDateTs);
+      String endDate = formatDate(endDateTs);
+      Statement st = db.createStatement();
+      ResultSet rs = st.executeQuery("SELECT * FROM events WHERE "
+        + String.format("event_date BETWEEN '%s' AND '%s'", startDate, endDate)
+      );
+      int eventsLength = getEventsLength(startDateTs, endDateTs, resolution);
+      AdminAnalytics analytics = new AdminAnalytics(eventsLength);
+      while (rs.next()) {
+        String eventType = rs.getString("event_type");
+        String accountType = rs.getString("account_type");
+        Date eventDate = rs.getDate("event_date");
+        int eventIndex = getEventIndex(eventDate, eventsLength, resolution);
+        analytics.addAnalytic(eventType, accountType, eventIndex);
+      }
+      rs.close();
+      st.close();
+      return analytics;
+    } catch (Exception exception) {
+      exception.printStackTrace();
+    }
+    return null;
+  }
+
   private static String formatKeys(List<String> keys) {
     StringBuilder sb = new StringBuilder();
     sb.append("(");
@@ -107,5 +134,13 @@ public class DatabaseUtils {
     }
     sb.append(")");
     return sb.toString();
+  }
+
+  private static int getEventsLength(long startDateTs, long endDateTs, long resolution) {
+    return (int) Math.ceil((double) (endDateTs - startDateTs) / resolution);
+  }
+
+  private static int getEventIndex(Date eventDate, int length, long resolution) {
+    return 0;
   }
 }

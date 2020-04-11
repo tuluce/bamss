@@ -19,8 +19,8 @@ public class AnalyticsController {
 	public ResponseEntity<UserAnalytics> userLevelAnalytis(@RequestBody Map<String, Object> body) {
     String token = (String) body.get("token");
     String apiKey = (String) body.get("api_key");
-    String startDateTs = (String) body.get("start_date");
-    String endDateTs = (String) body.get("end_date");
+    long startDateTs = Long.parseLong("" + body.get("start_date"));
+    long endDateTs = Long.parseLong("" + body.get("end_date"));
     List<String> keys = (List<String>) body.get("keys");
 
     String username = null;
@@ -31,9 +31,7 @@ public class AnalyticsController {
     }
     
     if (username != null) {
-      long startDateTsLong = Long.parseLong(startDateTs);
-      long endDateTsLong = Long.parseLong(endDateTs);
-      UserAnalytics result = DatabaseUtils.getUserLevelAnalytics(keys, startDateTsLong, endDateTsLong);
+      UserAnalytics result = DatabaseUtils.getUserLevelAnalytics(keys, startDateTs, endDateTs);
       return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

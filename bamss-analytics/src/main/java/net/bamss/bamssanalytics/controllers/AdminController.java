@@ -8,14 +8,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.bamss.bamssanalytics.models.AdminAnalytics;
+import net.bamss.bamssanalytics.util.DatabaseUtils;
+
 @RestController
 public class AdminController {
 	@PostMapping("/admin")
-	public ResponseEntity<Object> adminLevelAnalytis(@RequestBody Map<String, Object> body) {
+	public ResponseEntity<AdminAnalytics> adminLevelAnalytis(@RequestBody Map<String, Object> body) {
     String adminKey = (String) body.get("admin_key");
-    String eventType = (String) body.get("event_type");
-    String startDate = (String) body.get("start_date");
-    String endDate = (String) body.get("end_date");
-		return new ResponseEntity<>(HttpStatus.OK);
+    long startDateTs = Long.parseLong("" + body.get("start_date"));
+    long endDateTs = Long.parseLong("" + body.get("end_date"));
+    long resolution = Long.parseLong("" + body.get("resolution"));
+
+    if (adminKey.equals("admin_key")) {
+      AdminAnalytics result = DatabaseUtils.getAdminLevelAnalytics(startDateTs, endDateTs, resolution);
+      return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}
 }
