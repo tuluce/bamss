@@ -10,12 +10,12 @@ import PricingPage from './pages/PricingPage'
 export default function AppContent(props) {
   return (
     <Fragment>
-      {props.page === "home" && <HomePage/>}
-      {props.page === "signup" && <SignupPage/>}
-      {props.page === "login" && <LoginPage/>}
-      {props.page === "profile" && <ProfilePage/>}
-      {props.page === "admin" && <AdminPage/>}
-      {props.page === "pricing" && <PricingPage/>}
+      {props.page === "home" && <LoginPage />}
+      {props.page === "signup" && <SignupPage />}
+      {props.page === "login" && <LoginPage />}
+      {props.page === "profile" && <ProfilePage />}
+      {props.page === "admin" && <AdminPage />}
+      {props.page === "pricing" && <PricingPage />}
     </Fragment>
   );
 }
