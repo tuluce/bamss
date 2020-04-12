@@ -1,13 +1,17 @@
 function getSession() {
-  const token = localStorage.getItem("token");
   const username = localStorage.getItem("username");
-  if (token === null || username === null) {
+  const authEntity = localStorage.getItem("authEntity");
+  const authEntityType = localStorage.getItem("authEntityType");
+  if (username === null || authEntity === null || authEntityType === null) {
     return null;
   }
-  return {
-    token,
-    username
-  }
+  return { username, authEntity, authEntityType };
 }
 
-export default getSession;
+function setSession(username, authEntity, authEntityType) {
+  localStorage.setItem("username", username);
+  localStorage.setItem("authEntity", authEntity);
+  localStorage.setItem("authEntityType", authEntityType);
+}
+
+export { getSession, setSession };
