@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../../style/App.css';
 import { Button, Form } from 'react-bootstrap';
+import { AUTH_API_ROOT } from '../../util/api_roots';
 
 export default class SignupPage extends Component {
   state = { success: false, message: '' };
@@ -20,7 +21,7 @@ export default class SignupPage extends Component {
     const password = document.getElementById('password').value;
     const account_type = this.getAccountType();
     this.setState({ message: 'Registering...'});
-    const response = await fetch('https://bamss-auth.herokuapp.com/user', {
+    const response = await fetch(AUTH_API_ROOT + '/user', {
       method: 'PUT',
       body: JSON.stringify({ email, username, password, account_type }),
       headers: { 'Content-type': 'application/json; charset=UTF-8' }

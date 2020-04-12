@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../../style/App.css';
 import { Button, Form } from 'react-bootstrap';
 import { setSession } from '../../util/session';
+import { AUTH_API_ROOT } from '../../util/api_roots';
 
 export default class LoginPage extends Component {
   state = { message: '' };
@@ -10,7 +11,7 @@ export default class LoginPage extends Component {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     this.setState({ message: 'Logging in...'});
-    const response = await fetch('https://bamss-auth.herokuapp.com/user', {
+    const response = await fetch(AUTH_API_ROOT + '/user', {
       method: 'POST',
       body: JSON.stringify({ username, password }),
       headers: { 'Content-type': 'application/json; charset=UTF-8' }
@@ -24,7 +25,7 @@ export default class LoginPage extends Component {
         setSession(username, responseJson.apiKey, 'apiKey');
       }
       window.location = '/';
-    } else if (response.status === 401) {
+    } else if (response.status === 401 || response.status === 404) {
       this.setState({ message: 'Username and password do not match.'});
     } else {
       this.setState({ message: 'Something went wrong.'});
