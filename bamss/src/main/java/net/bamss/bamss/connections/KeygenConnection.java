@@ -1,11 +1,15 @@
 package net.bamss.bamss.connections;
 
-import java.util.Random;
+import java.util.HashMap;
 
 public class KeygenConnection {
+    private static String KEYGEN_SERVER = System.getenv("KEYGEN_SERVER");
+
     public static String getKey() {
-      Random rand = new Random();
-      String key = Integer.toString(rand.nextInt());
-      return key;
+        HashMap<String, Object> jsonResponse = HttpConnection.get(KEYGEN_SERVER);
+        if (jsonResponse == null) {
+            return null;
+        }
+        return (String) jsonResponse.get("key");
     }
 }

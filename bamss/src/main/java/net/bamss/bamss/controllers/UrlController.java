@@ -8,6 +8,9 @@ import net.bamss.bamss.connections.*;
 
 import net.bamss.bamss.models.ShortenResult;
 import net.bamss.bamss.models.Validation;
+import net.sf.uadetector.ReadableUserAgent;
+import net.sf.uadetector.UserAgentStringParser;
+import net.sf.uadetector.service.UADetectorServiceFactory;
 import org.bson.Document;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
@@ -27,6 +31,8 @@ import java.util.concurrent.CompletableFuture;
 public class UrlController {
 	private static final MongoDatabase db = MongoConnection.getMongoDatabase();
 	private static final JedisPool jedisPool = RedisConnection.getRedisPool();
+//	private static final UserAgentStringParser parser = UADetectorServiceFactory.getResourceModuleParser();
+	private static final int cacheSize = 4000; // %20 of the total url capacity, from 80/20 rule
 
 	@PostMapping("/shorten")
 	public ResponseEntity<ShortenResult> shorten(@RequestBody Map<String, String> body) {
@@ -44,6 +50,10 @@ public class UrlController {
 		}
 
 		String key = (customUrl != null) ? customUrl : KeygenConnection.getKey();
+
+		if(key == null){
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 
 		Validation validation = validate(token, apiKey);
 
@@ -64,7 +74,19 @@ public class UrlController {
 					AnalyticsConnection.recordShorten(accountType);
 				});
 
-				return new ResponseEntity<>(new ShortenResult(key, originalUrl), HttpStatus.CREATED);
+				Jedis jedis = jedisPool.getResource();
+
+				if (jedis != null) {
+					Long curCacheSize = jedis.dbSize();
+					if(curCacheSize >= cacheSize){
+						String keyToBeDeleted = jedis.randomKey();
+						jedis.del(keyToBeDeleted);
+					}
+					jedis.set(key, originalUrl);
+					jedis.close();
+				}
+
+				return new ResponseEntity<>(new ShortenResult(key, originalUrl, String.valueOf(expireDate)), HttpStatus.CREATED);
 			} else {
 				return new ResponseEntity<>(HttpStatus.TOO_MANY_REQUESTS);
 			}
@@ -74,14 +96,15 @@ public class UrlController {
 	}
 
 	@GetMapping("/{key}")
-	public ResponseEntity<Object> redirect(@PathVariable String key) throws URISyntaxException {
+	public ResponseEntity<Object> redirect(@PathVariable String key, HttpServletRequest request) throws URISyntaxException {
 		String url = null;
+		System.out.println("REDIRECT");
 
 		Jedis jedis = jedisPool.getResource();
 
 		if (jedis != null) {
+			System.out.println("cacheden aldi");
 			url = jedis.get(key);
-
 		}
 
 		if (url == null) {
@@ -102,17 +125,21 @@ public class UrlController {
 			jedis.close();
 		}
 
-		CompletableFuture.runAsync(() -> {
-			AnalyticsConnection.recordRedirect(key, "mobile", "TR", "android");
-		});
+//		CompletableFuture.runAsync(() -> {
+//			ReadableUserAgent agent = parser.parse(request.getHeader("User-Agent"));
+//			String platform = agent.getDeviceCategory().getCategory().getName();
+//			String os = agent.getOperatingSystem().getName();
+//			AnalyticsConnection.recordRedirect(key, platform, request.getLocale().getCountry(), os);
+//		});
 
-		URI uri = new URI("https://www." + url);
+		URI uri = new URI(url);
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setLocation(uri);
+		System.out.println("REDIRECT CIKTI");
 		return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
 	}
 
-	@GetMapping("/urls")
+	@PostMapping("/urls")
 	public ResponseEntity<Object> urls(@RequestBody Map<String, String> body) {
 		String token = body.get("token");
 		String apiKey = body.get("api_key");
@@ -131,8 +158,9 @@ public class UrlController {
 			for (Document document : collection.find(findQuery)) {
 				String key = String.valueOf(document.get("key"));
 				String url = String.valueOf(document.get("url"));
+				String expireDate = String.valueOf(document.get("expireDate"));
 
-				ShortenResult userUrl = new ShortenResult(key, url);
+				ShortenResult userUrl = new ShortenResult(key, url, expireDate);
 				urls.add(userUrl);
 			}
 
