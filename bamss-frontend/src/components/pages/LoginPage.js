@@ -22,7 +22,7 @@ export default class LoginPage extends Component {
       if (responseJson.authType === 'standart') {
         setSession(username, responseJson.token, 'token');
       } else if (responseJson.authType === 'business') {
-        setSession(username, responseJson.apiKey, 'apiKey');
+        setSession(username, responseJson.apiKey, 'api_key');
       }
       window.location = '/';
     } else if (response.status === 401 || response.status === 404) {
