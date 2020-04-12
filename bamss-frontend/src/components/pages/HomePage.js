@@ -17,14 +17,14 @@ export default class HomePage extends Component {
 
   handleShorten = async () => {
     const original_url = document.getElementById('original-url').value;
-    const key = document.getElementById('custom-key').value;
+    const custom_url = document.getElementById('custom-key').value;
     const expire_date = this.getExpireDate();
     const auth_type = getSession().authType;
     const auth_entity = getSession().authEntity;
     this.setState({ message: 'Please wait...'});
     const response = await fetch(CORE_API_ROOT + '/shorten', {
       method: 'POST',
-      body: JSON.stringify({ original_url, key, expire_date, [auth_type]: auth_entity }),
+      body: JSON.stringify({ original_url, custom_url, expire_date, [auth_type]: auth_entity }),
       headers: { 'Content-type': 'application/json; charset=UTF-8' }
     });
     if (response.status === 201) {
@@ -49,7 +49,7 @@ export default class HomePage extends Component {
   
   getUserContent() {
     const lastKeyContent = this.state.key ? (
-      <a href={CORE_API_ROOT + '/' + this.state.key} target='_blank'>
+      <a href={CORE_API_ROOT + '/' + this.state.key} target='_blank' rel='noopener noreferrer'>
         {CORE_API_ROOT + '/' + this.state.key}
       </a>
     ) : ('');
