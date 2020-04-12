@@ -1,7 +1,8 @@
 import React from 'react';
-import logo from '../resources/logo.svg';
-import '../style/App.css';
+import logo from '../../resources/logo.svg';
+import '../../style/App.css';
 import { Button, FormControl } from 'react-bootstrap';
+
 function HomePage() {
   return (
     <div className="App">
@@ -11,7 +12,6 @@ function HomePage() {
         <br/>
         <br/>
         <FormControl id="basic-url" aria-describedby="basic-addon3" style={{maxWidth: 300}}/>
-
         <br/>
         <Button variant="primary">Shorten</Button>
         <br/>
