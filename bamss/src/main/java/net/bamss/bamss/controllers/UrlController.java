@@ -81,6 +81,7 @@ public class UrlController {
 
 		if (jedis != null) {
 			url = jedis.get(key);
+
 		}
 
 		if (url == null) {
