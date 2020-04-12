@@ -3,8 +3,8 @@ import '../../style/App.css';
 
 function AdminPage () {
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className='App'>
+      <header className='App-header'>
         SEE ADMIN ANALYTICS XD
       </header>
     </div>

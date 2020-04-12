@@ -3,8 +3,8 @@ import '../../style/App.css';
 
 function PricingPage () {
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className='App'>
+      <header className='App-header'>
         PRICING TABLE
       </header>
     </div>

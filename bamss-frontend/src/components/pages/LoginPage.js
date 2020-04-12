@@ -4,29 +4,26 @@ import { Button, Form } from 'react-bootstrap';
 import { setSession } from '../../util/session';
 
 export default class LoginPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { message: '' };
-  }
+  state = { message: '' };
 
   handleLogin = async () => {
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
     this.setState({ message: 'Logging in...'});
-    const response = await fetch("https://bamss-auth.herokuapp.com/user", {
-      method: "POST",
+    const response = await fetch('https://bamss-auth.herokuapp.com/user', {
+      method: 'POST',
       body: JSON.stringify({ username, password }),
-      headers: { "Content-type": "application/json; charset=UTF-8" }
+      headers: { 'Content-type': 'application/json; charset=UTF-8' }
     })
     if (response.status === 200) {
       this.setState({ message: 'Logged in! Redirecting...'});
       const responseJson = await response.json();
-      if (responseJson.authType === "standart") {
-        setSession(username, responseJson.token, "token");
-      } else if (responseJson.authType === "business") {
-        setSession(username, responseJson.apiKey, "apiKey");
+      if (responseJson.authType === 'standart') {
+        setSession(username, responseJson.token, 'token');
+      } else if (responseJson.authType === 'business') {
+        setSession(username, responseJson.apiKey, 'apiKey');
       }
-      window.location = "/";
+      window.location = '/';
     } else if (response.status === 401) {
       this.setState({ message: 'Username and password do not match.'});
     } else {
@@ -36,21 +33,21 @@ export default class LoginPage extends Component {
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
+      <div className='App'>
+        <header className='App-header'>
           <Form>
             <Form.Group>
               <Form.Label>Username</Form.Label>
-              <Form.Control id="username" type="username" placeholder="Enter username" />
+              <Form.Control id='username' type='username' placeholder='Enter username' />
             </Form.Group>
             <br/>
             <Form.Group>
               <Form.Label>Password</Form.Label>
-              <Form.Control id="password" type="password" placeholder="Enter password" />
+              <Form.Control id='password' type='password' placeholder='Enter password' />
             </Form.Group>
-            <div id="message">{this.state.message}</div>
+            <div id='message'>{this.state.message}</div>
             <br/>
-            <Button variant="primary" type="submit" onClick={this.handleLogin}>
+            <Button variant='primary' onClick={this.handleLogin}>
               Login
             </Button>
           </Form>

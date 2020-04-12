@@ -1,7 +1,7 @@
 function getSession() {
-  const username = localStorage.getItem("username");
-  const authEntity = localStorage.getItem("authEntity");
-  const authEntityType = localStorage.getItem("authEntityType");
+  const username = localStorage.getItem('username');
+  const authEntity = localStorage.getItem('authEntity');
+  const authEntityType = localStorage.getItem('authEntityType');
   if (username === null || authEntity === null || authEntityType === null) {
     return null;
   }
@@ -9,9 +9,13 @@ function getSession() {
 }
 
 function setSession(username, authEntity, authEntityType) {
-  localStorage.setItem("username", username);
-  localStorage.setItem("authEntity", authEntity);
-  localStorage.setItem("authEntityType", authEntityType);
+  localStorage.setItem('username', username);
+  localStorage.setItem('authEntity', authEntity);
+  localStorage.setItem('authEntityType', authEntityType);
 }
 
-export { getSession, setSession };
+function clearSession() {
+  localStorage.clear()
+}
+
+export { getSession, setSession, clearSession };
