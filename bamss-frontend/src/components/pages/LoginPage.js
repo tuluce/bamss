@@ -14,7 +14,7 @@ export default class LoginPage extends Component {
       method: 'POST',
       body: JSON.stringify({ username, password }),
       headers: { 'Content-type': 'application/json; charset=UTF-8' }
-    })
+    });
     if (response.status === 200) {
       this.setState({ message: 'Logged in! Redirecting...'});
       const responseJson = await response.json();
@@ -35,12 +35,13 @@ export default class LoginPage extends Component {
     return (
       <div className='App'>
         <header className='App-header'>
+          <h1>Login</h1>
+          <br/>
           <Form>
             <Form.Group>
               <Form.Label>Username</Form.Label>
               <Form.Control id='username' type='username' placeholder='Enter username' />
             </Form.Group>
-            <br/>
             <Form.Group>
               <Form.Label>Password</Form.Label>
               <Form.Control id='password' type='password' placeholder='Enter password' />
@@ -48,7 +49,7 @@ export default class LoginPage extends Component {
             <div id='message'>{this.state.message}</div>
             <br/>
             <Button variant='primary' onClick={this.handleLogin}>
-              Login
+              Submit
             </Button>
           </Form>
         </header>

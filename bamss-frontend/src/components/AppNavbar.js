@@ -20,7 +20,7 @@ export default class App extends Component {
           <Nav.Link> </Nav.Link>
         </Nav>
         <Nav>
-          <Nav.Link onClick={() => this.handlePageClick('signup')}>Signup</Nav.Link>
+          <Nav.Link onClick={() => this.handlePageClick('signup')}>Register</Nav.Link>
           <Nav.Link onClick={() => this.handlePageClick('login')}>Login</Nav.Link>
         </Nav>
       </Fragment>
