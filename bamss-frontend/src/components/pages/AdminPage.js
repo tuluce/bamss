@@ -1,22 +1,142 @@
 import React, { Component, Fragment } from 'react';
 import '../../style/App.css';
-import { PieChart, Pie, Tooltip } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { getSession } from '../../util/session';
 import { ANALYTICS_API_ROOT } from '../../util/api_roots';
 
+let start_date;
+let end_date;
+let resolution;
+
 export default class AdminPage extends Component {
   state = { analytics: "Loading..." };
+  
+  getChart(data, isSingle) {
+    let line1 = "";
+    let line2 = "";
+    if (isSingle) {
+      line1 = <Line type="monotone" dataKey="hits" stroke="#8884d8" strokeWidth={3} />
+    } else {
+      line1 = <Line type="monotone" dataKey="standart" stroke="#8884d8" strokeWidth={3}/>
+      line2 = <Line type="monotone" dataKey="business" stroke="#82ca9d" strokeWidth={3}/>
+    }
+    return (
+      <div>
+        <LineChart
+          width={window.innerWidth * 0.9}
+          height={400}
+          data={data}
+          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="time" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          {line1}
+          {line2}
+        </LineChart>
+        <br/>
+        <br/>
+      </div>
+    );
+  }
+
+  processSingleData(data) {
+    let startIndex = 0;
+    let endIndex = data.length;
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].hits !== 0) {
+        startIndex = i;
+        break;
+      }
+    }
+    for (let i = data.length - 1; i >= 0; i--) {
+      if (data[i].hits !== 0) {
+        endIndex = i + 1;
+        break;
+      }
+    }
+    return data.slice(startIndex, endIndex);
+  }
+
+  processDoubleData(data) {
+    let startIndex = 0;
+    let endIndex = data.length;
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].standart !== 0 || data[i].business !== 0) {
+        startIndex = i;
+        break;
+      }
+    }
+    for (let i = data.length - 1; i >= 0; i--) {
+      if (data[i].standart !== 0 || data[i].business !== 0) {
+        endIndex = i + 1;
+        break;
+      }
+    }
+    return data.slice(startIndex, endIndex);
+  }
+
+  formatTs(timestamp) {
+    const day = ("" + new Date(timestamp)).substr(4, 6);
+    const time = ("" + new Date(timestamp)).substr(16, 5);
+    return day + " " + time;
+  }
+
+  mergeData(data) {
+    if (!data.standart && !data.business) {
+      return [];
+    }
+    if (!data.standart) {
+      data.standart = data.business.map(d => 0);
+    }
+    if (!data.business) {
+      data.business = data.standart.map(d => 0);
+    }
+    const mergedData = data.standart.map((c, i) => ({
+      time: this.formatTs(start_date + resolution * i),
+      standart: data.standart[i],
+      business: data.business[i]
+    }));
+    return this.processDoubleData(mergedData);
+  }
 
   getVisuals(analyticsData) {
-    return (JSON.stringify(analyticsData));
+    const rawRedirectData = analyticsData.redirect.total.map((count, i) => ({
+      time: this.formatTs(start_date + resolution * i),
+      hits: count
+    }));
+    const redirectData = this.processSingleData(rawRedirectData);
+
+    const shortenData = this.mergeData(analyticsData.shorten);
+    const loginData = this.mergeData(analyticsData.login);
+    const signupData = this.mergeData(analyticsData.signup);
+    
+    return (
+      <Fragment>
+        Redirect Requests
+        {this.getChart(redirectData, true)}
+
+        Shorten Requests
+        {this.getChart(shortenData, false)}
+
+        Login Requests
+        {this.getChart(loginData, false)}
+
+        Signup Requests
+        {this.getChart(signupData, false)}
+      </Fragment>
+    );
+      
   }
 
   async fetchAnalytics() {
-    const SEVEN_DAYS = 604800000;
+    const THREE_DAYS = 259200000;
     const ONE_HOUR = 3600000;
-    const end_date = new Date().getTime();
-    const start_date = end_date - SEVEN_DAYS;
-    const resolution = ONE_HOUR;
+    end_date = new Date().getTime();
+    start_date = end_date - THREE_DAYS;
+    resolution = ONE_HOUR;
     const auth_type = getSession().authType;
     const auth_entity = getSession().authEntity;
     const response = await fetch(ANALYTICS_API_ROOT + '/admin', {
