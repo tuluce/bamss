@@ -31,7 +31,7 @@ import java.util.concurrent.CompletableFuture;
 public class UrlController {
 	private static final MongoDatabase db = MongoConnection.getMongoDatabase();
 	private static final JedisPool jedisPool = RedisConnection.getRedisPool();
-//	private static final UserAgentStringParser parser = UADetectorServiceFactory.getResourceModuleParser();
+	private static final UserAgentStringParser parser = UADetectorServiceFactory.getResourceModuleParser();
 	private static final int cacheSize = 4000; // %20 of the total url capacity, from 80/20 rule
 
 	@PostMapping("/shorten")
@@ -125,12 +125,12 @@ public class UrlController {
 			jedis.close();
 		}
 
-//		CompletableFuture.runAsync(() -> {
-//			ReadableUserAgent agent = parser.parse(request.getHeader("User-Agent"));
-//			String platform = agent.getDeviceCategory().getCategory().getName();
-//			String os = agent.getOperatingSystem().getName();
-//			AnalyticsConnection.recordRedirect(key, platform, request.getLocale().getCountry(), os);
-//		});
+		CompletableFuture.runAsync(() -> {
+			ReadableUserAgent agent = parser.parse(request.getHeader("User-Agent"));
+			String platform = agent.getDeviceCategory().getCategory().getName();
+			String os = agent.getOperatingSystem().getName();
+			AnalyticsConnection.recordRedirect(key, platform, request.getLocale().getCountry(), os);
+		});
 
 		URI uri = new URI(url);
 		HttpHeaders httpHeaders = new HttpHeaders();
