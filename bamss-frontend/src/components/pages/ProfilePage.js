@@ -2,17 +2,38 @@ import React, { Component, Fragment } from 'react';
 import '../../style/App.css';
 import { Button, Card } from 'react-bootstrap';
 import { getSession } from '../../util/session';
-import { CORE_API_ROOT } from '../../util/api_roots';
+import { CORE_API_ROOT, ANALYTICS_API_ROOT } from '../../util/api_roots';
 
 class UrlCard extends Component {
-  state = { showAnalytics: false };
+  state = { showAnalytics: false, analytics: "Loading..." };
 
-  fetchAnalytics() {
-    return "Here are the analytics";
+  async fetchAnalytics() {
+    const keys = [this.props.shortUrl.key]
+    const start_date = 0;
+    const end_date = Number.MAX_SAFE_INTEGER
+    const auth_type = getSession().authType;
+    const auth_entity = getSession().authEntity;
+    const response = await fetch(ANALYTICS_API_ROOT + '/analytics', {
+      method: 'POST',
+      body: JSON.stringify({ keys, start_date, end_date, [auth_type]: auth_entity }),
+      headers: { 'Content-type': 'application/json; charset=UTF-8' }
+    });
+    if (response.status === 200) {
+      const responseJson = await response.json();
+      const analytics = JSON.stringify(responseJson);
+      this.setState({ ...this.state, analytics });
+    } else {
+      this.setState({ ...this.state, analytics: "Something went wrong." });
+    }
   }
 
   handleAnalyticsClick() {
-    this.setState({ showAnalytics: !this.state.showAnalytics });
+    const analytics = "Loading..."
+    if (!this.state.showAnalytics) {
+      this.fetchAnalytics();
+    }
+    const showAnalytics = !this.state.showAnalytics;
+    this.setState({ showAnalytics, analytics });
   }
 
   render() {
@@ -38,7 +59,7 @@ class UrlCard extends Component {
             {
               this.state.showAnalytics && (
                 <div>
-                  <br/>{this.fetchAnalytics()}
+                  <br/>{this.state.analytics}
                 </div>
               )
             }
