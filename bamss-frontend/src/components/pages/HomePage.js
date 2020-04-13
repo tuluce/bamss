@@ -15,9 +15,17 @@ export default class HomePage extends Component {
     return null;
   }
 
+  getCustomUrl() {
+    const value = document.getElementById('custom-key').value;
+    if (!value) {
+      return null;
+    }
+    return value;
+  }
+
   handleShorten = async () => {
     const original_url = document.getElementById('original-url').value;
-    const custom_url = document.getElementById('custom-key').value;
+    const custom_url = this.getCustomUrl();
     const expire_date = this.getExpireDate();
     const auth_type = getSession().authType;
     const auth_entity = getSession().authEntity;
