@@ -1,11 +1,57 @@
 import React, { Component, Fragment } from 'react';
 import '../../style/App.css';
 import { Button, Card } from 'react-bootstrap';
+import { PieChart, Pie, Tooltip } from 'recharts';
 import { getSession } from '../../util/session';
 import { CORE_API_ROOT, ANALYTICS_API_ROOT } from '../../util/api_roots';
 
 class UrlCard extends Component {
   state = { showAnalytics: false, analytics: "Loading..." };
+
+  getChart(title, data) {
+    return (
+      <div style={{width: 300, float: 'left'}}>
+        <b>{title}</b>
+        <PieChart width={280} height={200}>
+          <Pie dataKey="value" data={data}
+            cx={140} cy={100} innerRadius={60} outerRadius={80} paddingAngle={5}
+            fill="black" label />
+          <Tooltip />
+        </PieChart>
+        <br/>
+      </div>
+    );
+  }
+
+  getCountIndicator(count) {
+    return (
+      <div style={{width: 280, height: 200, float: 'left'}}>
+        <b>Hit Count</b>
+        <div style={{fontSize: '350%', padding: '10px 0'}}>
+          {count}
+        </div>
+        <br/>
+      </div>
+    );
+  }
+
+  extractData(analyticsElement) {
+    return Object.keys(analyticsElement).map(key => ({ 
+      name: key ? key : "unknown",
+      value: analyticsElement[key]
+    }));
+  }
+
+  getVisuals(analyticsData) {
+    if (!analyticsData) {
+      return this.getCountIndicator(0);
+    }
+    const totalCount = this.getCountIndicator(analyticsData.total.total);
+    const osChart = this.getChart("OS", this.extractData(analyticsData.os));
+    const platformChart = this.getChart("Platform", this.extractData(analyticsData.platform));
+    const localeChart = this.getChart("Locale", this.extractData(analyticsData.locale));
+    return (<Fragment> {totalCount} {osChart} {platformChart} {localeChart} </Fragment>);
+  }
 
   async fetchAnalytics() {
     const keys = [this.props.shortUrl.key]
@@ -20,7 +66,8 @@ class UrlCard extends Component {
     });
     if (response.status === 200) {
       const responseJson = await response.json();
-      const analytics = JSON.stringify(responseJson);
+      const analyticsData = responseJson.data[this.props.shortUrl.key]
+      const analytics = this.getVisuals(analyticsData);
       this.setState({ ...this.state, analytics });
     } else {
       this.setState({ ...this.state, analytics: "Something went wrong." });
