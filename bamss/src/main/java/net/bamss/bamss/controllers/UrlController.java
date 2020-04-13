@@ -46,28 +46,40 @@ public class UrlController {
 		if (expDate != null) {
 			expireDate = Long.parseLong(expDate);
 		} else {
-			expireDate = Instant.now().getEpochSecond() + 99999999;
-		}
-
-		String key = (customUrl != null) ? customUrl : KeygenConnection.getKey();
-
-		if(key == null){
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			expireDate = Instant.now().plusSeconds(2629743).toEpochMilli(); // 1 month default expiration
 		}
 
 		Validation validation = validate(token, apiKey);
-
 		final String accountType = (token != null) ? "standart" : "business";
 
 		if (validation != null) {
 			if (validation.getQuota() > 0) {
 				String creator = validation.getUsername();
 				MongoCollection<Document> collection = db.getCollection("urls");
+
+
+				String key;
+				if(customUrl != null){
+					Document checkCustomUrl = collection.find(Filters.eq("key", customUrl)).first();
+					if (checkCustomUrl != null) {
+						return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+					}
+					key = customUrl;
+				}
+				else{
+					key = KeygenConnection.getKey();
+				}
+
+				if(key == null){
+					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+
 				Document newUrl = new Document()
 						.append("url", originalUrl)
 						.append("key", key)
 						.append("creator", creator)
-						.append("expireDate", expireDate);
+						.append("expireDate", expireDate)
+						.append("disabled", 0);
 				collection.insertOne(newUrl);
 
 				CompletableFuture.runAsync(() -> {
@@ -98,12 +110,10 @@ public class UrlController {
 	@GetMapping("/{key}")
 	public ResponseEntity<Object> redirect(@PathVariable String key, HttpServletRequest request) throws URISyntaxException {
 		String url = null;
-		System.out.println("REDIRECT");
 
 		Jedis jedis = jedisPool.getResource();
 
 		if (jedis != null) {
-			System.out.println("cacheden aldi");
 			url = jedis.get(key);
 		}
 
@@ -117,6 +127,11 @@ public class UrlController {
 			url = String.valueOf(result.get("url"));
 
 			if (jedis != null) {
+				Long curCacheSize = jedis.dbSize();
+				if(curCacheSize >= cacheSize){
+					String keyToBeDeleted = jedis.randomKey();
+					jedis.del(keyToBeDeleted);
+				}
 				jedis.set(key, url);
 			}
 		}
@@ -135,7 +150,6 @@ public class UrlController {
 		URI uri = new URI(url);
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setLocation(uri);
-		System.out.println("REDIRECT CIKTI");
 		return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
 	}
 
