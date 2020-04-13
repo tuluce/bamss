@@ -23,6 +23,8 @@ export default class LoginPage extends Component {
         setSession(username, responseJson.token, 'token');
       } else if (responseJson.authType === 'business') {
         setSession(username, responseJson.apiKey, 'api_key');
+      } else if (responseJson.authType === 'admin') {
+        setSession(username, responseJson.adminKey, 'admin_key');
       }
       window.location = '/';
     } else if (response.status === 401 || response.status === 404) {

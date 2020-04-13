@@ -27,7 +27,23 @@ export default class App extends Component {
     );
   }
 
+  getAdminLinks() {
+    return (
+      <Fragment>
+        <Nav className='mr-auto'>
+          <Nav.Link><i>Admin Session</i></Nav.Link>
+        </Nav>
+        <Nav>
+          <Nav.Link onClick={() => this.handlePageClick('logout')}>Log out</Nav.Link>
+        </Nav>
+      </Fragment>
+    );
+  }
+
   getUserLinks(session) {
+    if (session.authType === "admin_key") {
+      return this.getAdminLinks();
+    }
     return (
       <Fragment>
         <Nav className='mr-auto'>

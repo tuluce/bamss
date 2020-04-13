@@ -111,8 +111,8 @@ public class DatabaseUtils {
       while (rs.next()) {
         String eventType = rs.getString("event_type");
         String accountType = rs.getString("account_type");
-        Date eventDate = rs.getDate("event_date");
-        int eventIndex = getEventIndex(eventDate, eventsLength, resolution);
+        Timestamp eventDate = rs.getTimestamp("event_date");
+        int eventIndex = getEventIndex(eventDate, startDateTs, resolution);
         analytics.addAnalytic(eventType, accountType, eventIndex);
       }
       rs.close();
@@ -143,7 +143,8 @@ public class DatabaseUtils {
     return (int) Math.ceil((double) (endDateTs - startDateTs) / resolution);
   }
 
-  private static int getEventIndex(Date eventDate, int length, long resolution) {
-    return 0;
+  private static int getEventIndex(Timestamp eventDate, long startDateTs, long resolution) {
+    long eventTs = eventDate.getTime();
+    return (int) Math.floor((double) (eventTs - startDateTs) / resolution);
   }
 }
