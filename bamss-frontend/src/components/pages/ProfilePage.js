@@ -4,6 +4,48 @@ import { Button, Card } from 'react-bootstrap';
 import { getSession } from '../../util/session';
 import { CORE_API_ROOT } from '../../util/api_roots';
 
+class UrlCard extends Component {
+  state = { showAnalytics: false };
+
+  fetchAnalytics() {
+    return "Here are the analytics";
+  }
+
+  handleAnalyticsClick() {
+    this.setState({ showAnalytics: !this.state.showAnalytics });
+  }
+
+  render() {
+    const rawDate = ("" + new Date(Number(this.props.shortUrl.expireDate))).substr(4, 11);
+    const day = rawDate.substr(4, 2);
+    const month = rawDate.substr(0, 3);
+    const year = rawDate.substr(7, 4);
+    const dateString = day + ' ' + month + ' ' + year;
+    const buttonText = this.state.showAnalytics ? "Hide Analytics" : "Show Analytics"
+    return (
+      <Fragment>
+        <Card style={{width: "90%"}}>
+          <Card.Header style={{backgroundColor: "grey"}}>
+            https://bamss.herokuapp.com/{this.props.shortUrl.key}
+          </Card.Header>
+          <Card.Body style={{backgroundColor: "white", color: "black"}}>
+            <b>Expiration date:</b> {dateString}<br/><br/>
+            <Button variant="dark" onClick={() => this.handleAnalyticsClick()}>{buttonText}</Button>
+            {
+              this.state.showAnalytics && (
+                <div>
+                  <br/>{this.fetchAnalytics()}
+                </div>
+              )
+            }
+          </Card.Body>
+        </Card>
+        <br/>
+      </Fragment>
+    );
+  }
+}
+
 export default class ProfilePage extends Component {
   state = { shortUrls: [] }
 
@@ -33,9 +75,10 @@ export default class ProfilePage extends Component {
           <Card.Header style={{backgroundColor: "grey"}}>
             https://bamss.herokuapp.com/{shortUrl.key}
           </Card.Header>
-          <Card.Body  style={{backgroundColor: "white", color: "black"}}>
+          <Card.Body style={{backgroundColor: "white", color: "black"}}>
             <b>Expiration date:</b> {dateString}<br/><br/>
-            <Button  variant="dark">Show Analytics</Button>
+            <Button variant="dark">Show Analytics</Button>
+
           </Card.Body>
         </Card>
         <br/>
@@ -44,7 +87,9 @@ export default class ProfilePage extends Component {
   }
 
   render() {
-    const urlCards = this.state.shortUrls.map((shortUrl, i) => this.getUrlCard(shortUrl, i));
+    const urlCards = this.state.shortUrls.map((shortUrl, i) => (
+      <UrlCard shortUrl={shortUrl} key={i} />
+    ));
     return (
       <div className='App'>
         <header className='App-header'>
