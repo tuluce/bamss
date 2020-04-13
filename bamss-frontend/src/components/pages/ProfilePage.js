@@ -22,11 +22,15 @@ class UrlCard extends Component {
     const year = rawDate.substr(7, 4);
     const dateString = day + ' ' + month + ' ' + year;
     const buttonText = this.state.showAnalytics ? "Hide Analytics" : "Show Analytics"
+    const shortLinkHref = 'https://bamss.herokuapp.com/' + this.props.shortUrl.key;
+    const shortLinkDisplay = 'bamss.herokuapp.com/' + this.props.shortUrl.key;
     return (
       <Fragment>
         <Card style={{width: "90%"}}>
           <Card.Header style={{backgroundColor: "grey"}}>
-            https://bamss.herokuapp.com/{this.props.shortUrl.key}
+            <a style={{color: "white"}} href={shortLinkHref}  target='_blank' rel='noopener noreferrer'>
+              {shortLinkDisplay}
+            </a>
           </Card.Header>
           <Card.Body style={{backgroundColor: "white", color: "black"}}>
             <b>Expiration date:</b> {dateString}<br/><br/>
