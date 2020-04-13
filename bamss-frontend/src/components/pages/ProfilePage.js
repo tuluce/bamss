@@ -22,6 +22,11 @@ export default class ProfilePage extends Component {
   }
 
   getUrlCard(shortUrl, i) {
+    const rawDate = ("" + new Date(Number(shortUrl.expireDate))).substr(4, 11);
+    const day = rawDate.substr(4, 2);
+    const month = rawDate.substr(0, 3);
+    const year = rawDate.substr(7, 4);
+    const dateString = day + ' ' + month + ' ' + year;
     return (
       <Fragment key={i}>
         <Card style={{width: "90%"}}>
@@ -29,7 +34,7 @@ export default class ProfilePage extends Component {
             https://bamss.herokuapp.com/{shortUrl.key}
           </Card.Header>
           <Card.Body  style={{backgroundColor: "white", color: "black"}}>
-            Expiration date: {shortUrl.url}<br/><br/>
+            <b>Expiration date:</b> {dateString}<br/><br/>
             <Button  variant="dark">Show Analytics</Button>
           </Card.Body>
         </Card>

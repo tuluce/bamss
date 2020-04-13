@@ -10,7 +10,7 @@ export default class HomePage extends Component {
   getExpireDate() {
     const dateInput = document.getElementById('expire-date').value;
     if (dateInput) {
-      return new Date(dateInput).getTime() + '';
+      return new Date(dateInput).getTime() + '000';
     }
     return null;
   }
