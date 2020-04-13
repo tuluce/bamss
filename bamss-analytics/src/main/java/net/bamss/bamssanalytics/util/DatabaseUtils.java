@@ -23,9 +23,9 @@ public class DatabaseUtils {
         + "event_type VARCHAR (16) NOT NULL,"
         + "account_type VARCHAR (16) NOT NULL,"
         + "key VARCHAR (64),"
-        + "platform VARCHAR (16),"
-        + "locale VARCHAR (16),"
-        + "os VARCHAR (16));"
+        + "platform VARCHAR (64),"
+        + "locale VARCHAR (64),"
+        + "os VARCHAR (64));"
       );
       st.close();
       Statement st2 = db.createStatement();
