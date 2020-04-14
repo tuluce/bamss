@@ -3,10 +3,12 @@ package net.bamss.bamss.connections;
 import java.util.HashMap;
 
 public class IpToRegionConnection {
-  private static String IP_TO_REGION_API = "http://ip-api.com/json/";
+  private static String IP_TO_REGION_API = "http://ip-api.com/json";
 
   public static String getRegion(String ipAddress) {
+    System.out.println(IP_TO_REGION_API + "/" + ipAddress);
     HashMap<String, Object> jsonResponse = HttpConnection.get(IP_TO_REGION_API + "/" + ipAddress);
+    System.out.println(jsonResponse);
     if (jsonResponse == null || jsonResponse.get("city") == null) {
       return "unknown";
     }
