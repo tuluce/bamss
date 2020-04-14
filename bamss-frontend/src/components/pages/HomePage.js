@@ -41,6 +41,8 @@ export default class HomePage extends Component {
       this.setState({ message: 'Short URL created!', key: responseJson.key});
     } else if (response.status === 429) {
       this.setState({ message: 'You are out of your daily quota! Consider upgrading your plan.', key: null });
+    } else if (response.status === 406) {
+      this.setState({ message: 'This custom URL exists, please provide another one or leave it blank.', key: null });
     } else {
       this.setState({ message: 'Something went wrong.', key: null});
     }
