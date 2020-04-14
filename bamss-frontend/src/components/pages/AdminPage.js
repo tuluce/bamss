@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import '../../style/App.css';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { getSession } from '../../util/session';
 import { ANALYTICS_API_ROOT } from '../../util/api_roots';
@@ -160,13 +159,11 @@ export default class AdminPage extends Component {
 
   render() {
     return (
-      <div className='App'>
-        <header className='App-header'>
-          <h1>Admin Analytics</h1>
-          <br/>
-          {this.state.analytics}
-        </header>
-      </div>
+      <Fragment>
+        <h1>Admin Analytics</h1>
+        <br/>
+        {this.state.analytics}
+      </Fragment>
     );
   }
 }

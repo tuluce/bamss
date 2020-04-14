@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import '../../style/App.css';
 import { Button, Card } from 'react-bootstrap';
 import { PieChart, Pie, Tooltip } from 'recharts';
 import { getSession } from '../../util/session';
@@ -173,14 +172,12 @@ export default class ProfilePage extends Component {
       <UrlCard shortUrl={shortUrl} key={i} />
     ));
     return (
-      <div className='App'>
-        <header className='App-header'>
-          {apiKeySection}
-          <h1>My URLs (<b>{getSession().username}</b>)</h1>
-          <br/>
-          {urlCards}
-        </header>
-      </div>
+      <Fragment>
+        {apiKeySection}
+        <h1>My URLs (<b>{getSession().username}</b>)</h1>
+        <br/>
+        {urlCards}
+      </Fragment>
     );
   }
 }

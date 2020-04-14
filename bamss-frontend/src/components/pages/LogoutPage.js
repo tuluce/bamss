@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import '../../style/App.css';
+import React, { Component, Fragment } from 'react';
 import { clearSession } from '../../util/session';
 
 export default class LogoutPage extends Component {
@@ -9,12 +8,6 @@ export default class LogoutPage extends Component {
   }
 
   render() {
-    return (
-      <div className='App'>
-        <header className='App-header'>
-          Logging out...
-        </header>
-      </div>
-    );
+    return (<Fragment>Logging out...</Fragment>);
   }
 }

@@ -1,14 +1,7 @@
-import React from 'react';
-import '../../style/App.css';
+import React, { Fragment } from 'react';
 
 function PricingPage () {
-  return (
-    <div className='App'>
-      <header className='App-header'>
-        PRICING TABLE
-      </header>
-    </div>
-  );
+  return (<Fragment>Pricing Table Here</Fragment>);
 }
 
 export default PricingPage;

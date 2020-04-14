@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import '../../style/App.css';
+import React, { Component, Fragment } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { AUTH_API_ROOT } from '../../util/api_roots';
 
@@ -67,13 +66,11 @@ export default class SignupPage extends Component {
       <div id='message'>{this.state.message}</div>
     );
     return (
-      <div className='App'>
-        <header className='App-header'>
-          <h1>Register</h1>
-          <br/>
-          {form}
-        </header>
-      </div>
+      <Fragment>
+        <h1>Register</h1>
+        <br/>
+        {form}
+      </Fragment>
     );
   }
 }

@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import '../style/App.css';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import { getSession } from '../util/session';

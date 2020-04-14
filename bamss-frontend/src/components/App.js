@@ -19,7 +19,9 @@ export default class App extends Component {
     return (
       <Fragment>
         <AppNavbar setPage={this.setPage}/>
-        <AppContent page={this.state.page}/>
+        <header className='App'>
+          <AppContent page={this.state.page}/>
+        </header>
       </Fragment>
     );
   }

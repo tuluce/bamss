@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import '../../style/App.css';
+import React, { Component, Fragment } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { setSession } from '../../util/session';
 import { AUTH_API_ROOT } from '../../util/api_roots';
@@ -46,27 +45,25 @@ export default class LoginPage extends Component {
 
   render() {
     return (
-      <div className='App'>
-        <header className='App-header'>
-          <h1>Login</h1>
+      <Fragment>
+        <h1>Login</h1>
+        <br/>
+        <Form>
+          <Form.Group>
+            <Form.Label>Username</Form.Label>
+            <Form.Control id='username' type='username' placeholder='Enter username' />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Password</Form.Label>
+            <Form.Control id='password' type='password' placeholder='Enter password' />
+          </Form.Group>
+          <div id='message'>{this.state.message}</div>
           <br/>
-          <Form>
-            <Form.Group>
-              <Form.Label>Username</Form.Label>
-              <Form.Control id='username' type='username' placeholder='Enter username' />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Password</Form.Label>
-              <Form.Control id='password' type='password' placeholder='Enter password' />
-            </Form.Group>
-            <div id='message'>{this.state.message}</div>
-            <br/>
-            <Button id='submit_button' variant='primary' onClick={this.handleLogin}>
-              Submit
-            </Button>
-          </Form>
-        </header>
-      </div>
+          <Button id='submit_button' variant='primary' onClick={this.handleLogin}>
+            Submit
+          </Button>
+        </Form>
+      </Fragment>
     );
   }
 }

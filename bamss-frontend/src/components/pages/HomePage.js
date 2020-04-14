@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import '../../style/App.css';
 import { Button, FormControl, InputGroup } from 'react-bootstrap';
 import { getSession } from '../../util/session';
 import { CORE_API_ROOT } from '../../util/api_roots';
@@ -90,14 +89,12 @@ export default class HomePage extends Component {
     const session = getSession();
     const content = (session !== null) ? this.getUserContent() : this.getAnonContent();
     return (
-      <div className='App'>
-        <header className='App-header'>
-          <h1>BAMSS</h1>
-          <h1>URL Shortener</h1>
-          <br/>
-          {content}
-        </header>
-      </div>
+      <Fragment>
+        <h1>BAMSS</h1>
+        <h1>URL Shortener</h1>
+        <br/>
+        {content}
+      </Fragment>
     );
   }
 }

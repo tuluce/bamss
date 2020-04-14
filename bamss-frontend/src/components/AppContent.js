@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-import '../style/App.css';
 import HomePage from './pages/HomePage'
 import SignupPage from './pages/SignupPage'
 import LoginPage from './pages/LoginPage'
