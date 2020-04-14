@@ -1,0 +1,1 @@
+web: locust -P $PORT
