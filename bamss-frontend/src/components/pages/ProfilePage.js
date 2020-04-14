@@ -159,12 +159,23 @@ export default class ProfilePage extends Component {
   }
 
   render() {
+    const apiKeySection = getSession().authType === 'api_key' ? (
+      <Fragment>
+        <h1>My API Key (<b>{getSession().username}</b>)</h1>
+        <p>
+          [<font color="#282c34" style={{fontSize: '50%'}}>{getSession().authEntity}</font>]
+          <br/>(select to reveal)
+        </p>
+        <br/><br/>
+      </Fragment>
+    ) : ('');
     const urlCards = this.state.shortUrls.map((shortUrl, i) => (
       <UrlCard shortUrl={shortUrl} key={i} />
     ));
     return (
       <div className='App'>
         <header className='App-header'>
+          {apiKeySection}
           <h1>My URLs (<b>{getSession().username}</b>)</h1>
           <br/>
           {urlCards}
