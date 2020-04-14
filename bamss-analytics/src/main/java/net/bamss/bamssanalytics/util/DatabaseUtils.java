@@ -24,7 +24,7 @@ public class DatabaseUtils {
         + "account_type VARCHAR (16) NOT NULL,"
         + "key VARCHAR (64),"
         + "platform VARCHAR (64),"
-        + "locale VARCHAR (64),"
+        + "region VARCHAR (64),"
         + "os VARCHAR (64));"
       );
       st.close();
@@ -40,13 +40,13 @@ public class DatabaseUtils {
   }
 
   private static void insertEvent(String eventType, String accountType,
-      String key, String platform, String locale, String os) {
+      String key, String platform, String region, String os) {
     try {
       Statement st = db.createStatement();
       st.execute("INSERT INTO " 
-        + "events(event_date, event_type, account_type, key, platform, locale, os) "
+        + "events(event_date, event_type, account_type, key, platform, region, os) "
         + String.format("VALUES(CURRENT_TIMESTAMP, '%s', '%s', '%s', '%s', '%s', '%s');",
-            eventType, accountType, key, platform, locale, os)
+            eventType, accountType, key, platform, region, os)
       );
       st.close();
     } catch (Exception exception) {
@@ -55,8 +55,8 @@ public class DatabaseUtils {
   }
 
   public static void insertUserEvent(String eventType,
-      String key, String platform, String locale, String os) {
-    insertEvent(eventType, null, key, platform, locale, os);
+      String key, String platform, String region, String os) {
+    insertEvent(eventType, null, key, platform, region, os);
   }
 
   public static void insertAdminEvent(String eventType, String accountType) {
@@ -85,7 +85,7 @@ public class DatabaseUtils {
       while (rs.next()) {
         String key = rs.getString("key");
         analytics.addAnalytic(key, "platform", rs.getString("platform"));
-        analytics.addAnalytic(key, "locale", rs.getString("locale"));
+        analytics.addAnalytic(key, "region", rs.getString("region"));
         analytics.addAnalytic(key, "os", rs.getString("os"));
         analytics.addAnalytic(key, "total", "total");
       }

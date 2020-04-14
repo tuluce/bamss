@@ -18,9 +18,9 @@ public class EventController {
     if (eventType.equals("redirect")) {
       String key = (String) body.get("key");
       String platform = (String) body.get("platform");
-      String locale = (String) body.get("locale");
+      String region = (String) body.get("region");
       String os = (String) body.get("os");
-      DatabaseUtils.insertUserEvent(eventType, key, platform, locale, os);
+      DatabaseUtils.insertUserEvent(eventType, key, platform, region, os);
     } else {
       String accountType = (String) body.get("account_type");
       DatabaseUtils.insertAdminEvent(eventType, accountType);

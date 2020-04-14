@@ -48,8 +48,8 @@ class UrlCard extends Component {
     const totalCount = this.getCountIndicator(analyticsData.total.total);
     const osChart = this.getChart("OS", this.extractData(analyticsData.os));
     const platformChart = this.getChart("Platform", this.extractData(analyticsData.platform));
-    const localeChart = this.getChart("Locale", this.extractData(analyticsData.locale));
-    return (<Fragment> {totalCount} {osChart} {platformChart} {localeChart} </Fragment>);
+    const regionChart = this.getChart("Region", this.extractData(analyticsData.region));
+    return (<Fragment> {totalCount} {osChart} {platformChart} {regionChart} </Fragment>);
   }
 
   async fetchAnalytics() {
