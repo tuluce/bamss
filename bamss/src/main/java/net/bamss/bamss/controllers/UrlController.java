@@ -42,11 +42,16 @@ public class UrlController {
 		String customUrl = body.get("custom_url");
 		String expDate = body.get("expire_date");
 
+		// 1 month default expiration
+		long defaultExpireDate = Instant.now().plusSeconds(2629743).toEpochMilli();
 		long expireDate;
 		if (expDate != null) {
 			expireDate = Long.parseLong(expDate);
+			if (expireDate > defaultExpireDate) {
+				expireDate = defaultExpireDate;
+			}
 		} else {
-			expireDate = Instant.now().plusSeconds(2629743).toEpochMilli(); // 1 month default expiration
+			expireDate = defaultExpireDate; 
 		}
 
 		Validation validation = validate(token, apiKey);
@@ -121,7 +126,10 @@ public class UrlController {
 			MongoCollection<Document> collection = db.getCollection("urls");
 			Document result = collection.find(Filters.eq("key", key)).first();
 			if (result == null) {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				URI uri = new URI("https://bamss-url.web.app/not_found.html");
+				HttpHeaders httpHeaders = new HttpHeaders();
+				httpHeaders.setLocation(uri);
+				return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
 			}
 
 			url = String.valueOf(result.get("url"));
@@ -144,7 +152,8 @@ public class UrlController {
 			ReadableUserAgent agent = parser.parse(request.getHeader("User-Agent"));
 			String platform = agent.getDeviceCategory().getCategory().getName();
 			String os = agent.getOperatingSystem().getName();
-			AnalyticsConnection.recordRedirect(key, platform, request.getLocale().getCountry(), os);
+			String region = IpToRegionConnection.getRegion(request.getRemoteAddr());
+			AnalyticsConnection.recordRedirect(key, platform, region, os);
 		});
 
 		URI uri = new URI(url);
