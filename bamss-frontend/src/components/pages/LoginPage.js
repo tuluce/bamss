@@ -34,6 +34,16 @@ export default class LoginPage extends Component {
     }
   };
 
+  componentDidMount() {
+    document.getElementById("password")
+      .addEventListener("keyup", function(event) {
+      event.preventDefault();
+      if (event.keyCode === 13) {
+        document.getElementById("submit_button").click();
+      }
+    });
+  }
+
   render() {
     return (
       <div className='App'>
@@ -51,7 +61,7 @@ export default class LoginPage extends Component {
             </Form.Group>
             <div id='message'>{this.state.message}</div>
             <br/>
-            <Button variant='primary' onClick={this.handleLogin}>
+            <Button id='submit_button' variant='primary' onClick={this.handleLogin}>
               Submit
             </Button>
           </Form>
