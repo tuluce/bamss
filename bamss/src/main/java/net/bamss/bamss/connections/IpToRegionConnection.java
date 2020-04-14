@@ -4,6 +4,9 @@ import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 public class IpToRegionConnection {
   private static String IP_TO_REGION_API = "http://ip-api.com/json";
   private static final String[] IP_HEADER_CANDIDATES = {
@@ -29,7 +32,13 @@ public class IpToRegionConnection {
         return ip;
       }
     }
-    return request.getRemoteAddr();
+    if (request.getRemoteAddr() != null) {
+      return request.getRemoteAddr();
+    }
+    HttpServletRequest innerRequest = (
+      (ServletRequestAttributes) RequestContextHolder.getRequestAttributes()
+    ).getRequest();
+    return innerRequest.getRemoteAddr(); 
   }
 
   public static String getRegion(HttpServletRequest request) {
