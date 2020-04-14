@@ -11,7 +11,7 @@ import { getSession } from '../util/session';
 
 export default function AppContent(props) {
   const session = getSession();
-  if (session !== null && session.authType === 'admin_key') {
+  if (session !== null && session.authType === 'admin_key' && props.page !== 'logout') {
     return <AdminPage />
   }
   return (
