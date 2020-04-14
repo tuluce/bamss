@@ -151,7 +151,7 @@ public class UrlController {
 			ReadableUserAgent agent = parser.parse(request.getHeader("User-Agent"));
 			String platform = agent.getDeviceCategory().getCategory().getName();
 			String os = agent.getOperatingSystem().getName();
-			String region = IpToRegionConnection.getRegion(request.getRemoteAddr());
+			String region = IpToRegionConnection.getRegion(request);
 			AnalyticsConnection.recordRedirect(key, platform, region, os);
 		});
 
