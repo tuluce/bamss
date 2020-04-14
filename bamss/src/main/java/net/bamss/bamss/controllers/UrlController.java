@@ -132,8 +132,10 @@ public class UrlController {
 				return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
 			}
 
-			url = String.valueOf(result.get("url"));
-
+			if (String.valueOf(result.get("disabled")).equals("1")) {
+				url = String.valueOf(result.get("url"));
+			}
+			
 			if (jedis != null) {
 				Long curCacheSize = jedis.dbSize();
 				if(curCacheSize >= cacheSize){
