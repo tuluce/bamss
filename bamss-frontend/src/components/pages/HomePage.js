@@ -94,7 +94,7 @@ export default class HomePage extends Component {
         <header className='App-header'>
           <h1>BAMSS</h1>
           <h1>URL Shortener</h1>
-          <br/><br/>
+          <br/>
           {content}
         </header>
       </div>
