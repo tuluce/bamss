@@ -24,6 +24,7 @@ public class IpToRegionConnection {
   private static String getClientIpAddress(HttpServletRequest request) {
     for (String header : IP_HEADER_CANDIDATES) {
       String ip = request.getHeader(header);
+      System.out.println(header + " : " + ip);
       if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {
         return ip;
       }

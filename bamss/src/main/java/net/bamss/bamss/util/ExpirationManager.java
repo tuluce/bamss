@@ -16,7 +16,7 @@ import net.bamss.bamss.connections.MongoConnection;
 @Service
 public class ExpirationManager {
   private static final long DISABLE_PERIOD = 2628000000L; // 1 month
-  private static final long SCHEDULE_RATE = 20000L; // 20 seconds
+  private static final long SCHEDULE_RATE = 86400000L; // 1 day
   private static final MongoDatabase db = MongoConnection.getMongoDatabase();
   
   private static void deleteDisabledUrls() {
