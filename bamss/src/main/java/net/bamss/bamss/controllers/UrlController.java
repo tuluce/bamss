@@ -126,10 +126,7 @@ public class UrlController {
 			MongoCollection<Document> collection = db.getCollection("urls");
 			Document result = collection.find(Filters.eq("key", key)).first();
 			if (result == null) {
-				URI uri = new URI("https://bamss-url.web.app/not_found.html");
-				HttpHeaders httpHeaders = new HttpHeaders();
-				httpHeaders.setLocation(uri);
-				return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
 
 			if (String.valueOf(result.get("disabled")).equals("1")) {
