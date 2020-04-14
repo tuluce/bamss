@@ -147,11 +147,12 @@ public class UrlController {
 			jedis.close();
 		}
 
+		ReadableUserAgent agent = parser.parse(request.getHeader("User-Agent"));
+		String ipAddress = IpToRegionConnection.getIpAddress(request);
+		String platform = agent.getDeviceCategory().getCategory().getName();
+		String os = agent.getOperatingSystem().getName();
+		String region = IpToRegionConnection.getRegion(ipAddress);
 		CompletableFuture.runAsync(() -> {
-			ReadableUserAgent agent = parser.parse(request.getHeader("User-Agent"));
-			String platform = agent.getDeviceCategory().getCategory().getName();
-			String os = agent.getOperatingSystem().getName();
-			String region = IpToRegionConnection.getRegion(request);
 			AnalyticsConnection.recordRedirect(key, platform, region, os);
 		});
 

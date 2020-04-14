@@ -24,7 +24,7 @@ public class IpToRegionConnection {
     "x-forwarded-for"
   };
 
-  private static String getClientIpAddress(HttpServletRequest request) {
+  public static String getIpAddress(HttpServletRequest request) {
     for (String header : IP_HEADER_CANDIDATES) {
       String ip = request.getHeader(header);
       System.out.println(header + " : " + ip);
@@ -38,13 +38,12 @@ public class IpToRegionConnection {
     HttpServletRequest innerRequest = (
       (ServletRequestAttributes) RequestContextHolder.getRequestAttributes()
     ).getRequest();
-    return innerRequest.getRemoteAddr(); 
+    return innerRequest.getRemoteAddr();
   }
 
-  public static String getRegion(HttpServletRequest request) {
-    String ipAddress = getClientIpAddress(request);
-    HashMap<String, Object> jsonResponse = HttpConnection.get(IP_TO_REGION_API + "/" + ipAddress);
+  public static String getRegion(String ipAddress) {
     System.out.println("REQUEST : " + IP_TO_REGION_API + "/" + ipAddress);
+    HashMap<String, Object> jsonResponse = HttpConnection.get(IP_TO_REGION_API + "/" + ipAddress);
     System.out.println("RESPONSE : " + jsonResponse);
     if (jsonResponse == null || jsonResponse.get("city") == null) {
       return "unknown";
