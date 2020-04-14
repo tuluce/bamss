@@ -26,8 +26,8 @@ public class KeyController {
     private static final int keyLength = 6;
 
 
-    @GetMapping("/")
-    public ResponseEntity<Key> getKey() {
+    @GetMapping("/cached")
+    public ResponseEntity<Key> getKeyCached() {
         Jedis jedis = jedisPool.getResource();
 
         if (jedis != null) {
@@ -44,5 +44,11 @@ public class KeyController {
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
+    
+    @GetMapping("/")
+    public ResponseEntity<Key> getKey() {
+        String key = RandomStringUtils.randomAlphanumeric(keyLength);
+        return new ResponseEntity<>(new Key(key), HttpStatus.OK);
+    }
+    
 }
