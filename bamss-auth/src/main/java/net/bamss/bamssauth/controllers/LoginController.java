@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import net.bamss.bamssauth.models.BusinessAuth;
 import net.bamss.bamssauth.models.AdminAuth;
 import net.bamss.bamssauth.models.BaseAuth;
-import net.bamss.bamssauth.models.StandartAuth;
+import net.bamss.bamssauth.models.StandardAuth;
 import net.bamss.bamssauth.util.AuthUtils;
 import net.bamss.bamssauth.connections.AnalyticsConnection;
 import net.bamss.bamssauth.connections.MongoConnection;
@@ -45,9 +45,9 @@ public class LoginController {
       CompletableFuture.runAsync(() -> {
         AnalyticsConnection.recordLogin(accountType);
       });
-      if (accountType.equals("standart")) {
+      if (accountType.equals("standard")) {
         String token = AuthUtils.getToken(username);
-        return new ResponseEntity<>(new StandartAuth(token), HttpStatus.OK);
+        return new ResponseEntity<>(new StandardAuth(token), HttpStatus.OK);
       } else if (accountType.equals("business")) {
         String apiKey = AuthUtils.getApiKey(username);
         return new ResponseEntity<>(new BusinessAuth(apiKey), HttpStatus.OK);

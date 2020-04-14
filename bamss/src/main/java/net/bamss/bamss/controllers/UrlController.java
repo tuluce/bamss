@@ -55,7 +55,7 @@ public class UrlController {
 		}
 
 		Validation validation = validate(token, apiKey);
-		final String accountType = (token != null) ? "standart" : "business";
+		final String accountType = (token != null) ? "standard" : "business";
 
 		if (validation != null) {
 			if (validation.getQuota() > 0) {

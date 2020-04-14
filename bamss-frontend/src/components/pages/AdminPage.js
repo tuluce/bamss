@@ -16,7 +16,7 @@ export default class AdminPage extends Component {
     if (isSingle) {
       line1 = <Line type="monotone" dataKey="hits" stroke="#8884d8" strokeWidth={3} />
     } else {
-      line1 = <Line type="monotone" dataKey="standart" stroke="#8884d8" strokeWidth={3}/>
+      line1 = <Line type="monotone" dataKey="standard" stroke="#8884d8" strokeWidth={3}/>
       line2 = <Line type="monotone" dataKey="business" stroke="#82ca9d" strokeWidth={3}/>
     }
     return (
@@ -63,13 +63,13 @@ export default class AdminPage extends Component {
     let startIndex = 0;
     let endIndex = data.length;
     for (let i = 0; i < data.length; i++) {
-      if (data[i].standart !== 0 || data[i].business !== 0) {
+      if (data[i].standard !== 0 || data[i].business !== 0) {
         startIndex = i;
         break;
       }
     }
     for (let i = data.length - 1; i >= 0; i--) {
-      if (data[i].standart !== 0 || data[i].business !== 0) {
+      if (data[i].standard !== 0 || data[i].business !== 0) {
         endIndex = i + 1;
         break;
       }
@@ -84,18 +84,18 @@ export default class AdminPage extends Component {
   }
 
   mergeData(data) {
-    if (!data.standart && !data.business) {
+    if (!data.standard && !data.business) {
       return [];
     }
-    if (!data.standart) {
-      data.standart = data.business.map(d => 0);
+    if (!data.standard) {
+      data.standard = data.business.map(d => 0);
     }
     if (!data.business) {
-      data.business = data.standart.map(d => 0);
+      data.business = data.standard.map(d => 0);
     }
-    const mergedData = data.standart.map((c, i) => ({
+    const mergedData = data.standard.map((c, i) => ({
       time: this.formatTs(start_date + resolution * i),
-      standart: data.standart[i],
+      standard: data.standard[i],
       business: data.business[i]
     }));
     return this.processDoubleData(mergedData);

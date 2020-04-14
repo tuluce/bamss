@@ -18,7 +18,7 @@ export default class LoginPage extends Component {
     if (response.status === 200) {
       this.setState({ message: 'Logged in! Redirecting...'});
       const responseJson = await response.json();
-      if (responseJson.authType === 'standart') {
+      if (responseJson.authType === 'standard') {
         setSession(username, responseJson.token, 'token');
       } else if (responseJson.authType === 'business') {
         setSession(username, responseJson.apiKey, 'api_key');

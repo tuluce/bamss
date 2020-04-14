@@ -1,10 +1,10 @@
 package net.bamss.bamssauth.models;
 
-public class StandartAuth extends BaseAuth {
+public class StandardAuth extends BaseAuth {
 	private final String token;
 
-	public StandartAuth(String token) {
-		super("standart");
+	public StandardAuth(String token) {
+		super("standard");
 		this.token = token;
 	}
 

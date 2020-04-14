@@ -17,7 +17,7 @@ import net.bamss.bamssauth.models.QuotaStatus;
 
 public class QuotaUtils {
   private static final MongoDatabase db = MongoConnection.getMongoDatabase();
-  private static final int STANDART_QUOTA = Integer.parseInt(System.getenv("STANDART_QUOTA"));
+  private static final int STANDARD_QUOTA = Integer.parseInt(System.getenv("STANDARD_QUOTA"));
   private static final int BUSINESS_QUOTA = Integer.parseInt(System.getenv("BUSINESS_QUOTA"));
 
   public static int getQuota(String username) {
@@ -47,8 +47,8 @@ public class QuotaUtils {
   }
 
   private static int getMaxQuota(String accountType) {
-    if (accountType.equals("standart")) {
-      return STANDART_QUOTA;
+    if (accountType.equals("standard")) {
+      return STANDARD_QUOTA;
     }
     if (accountType.equals("business")) {
       return BUSINESS_QUOTA;
