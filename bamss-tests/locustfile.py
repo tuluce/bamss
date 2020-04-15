@@ -19,7 +19,6 @@ class UserBehavior(TaskSet):
         }
         self.client.put(AUTH_URL, json=payload)
         
-    @task(1)
     def login(self):
         payload = {'username': self.username, 'password': self.password}
         response = self.client.post(AUTH_URL, json=payload)
@@ -30,11 +29,11 @@ class UserBehavior(TaskSet):
     def health(self):
         self.client.get(HEALTH_URL)
 
-    @task(8)
+    @task(100)
     def redirect(self):
         self.client.get(REDIRECT_URL)
 
-    @task(2)
+    @task(1)
     def shroten(self):
         payload = {'token': self.token, 'original_url': 'http://www.example.com'}
         self.client.post(SHORTEN_URL, json=payload)

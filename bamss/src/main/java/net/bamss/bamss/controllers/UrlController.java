@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -30,7 +29,6 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 public class UrlController {
 	private static final MongoDatabase db = MongoConnection.getMongoDatabase();
-	private static final JedisPool jedisPool = RedisConnection.getRedisPool();
 	private static final UserAgentStringParser parser = UADetectorServiceFactory.getResourceModuleParser();
 	private static final int cacheSize = 4000; // %20 of the total url capacity, from 80/20 rule
 
@@ -91,8 +89,7 @@ public class UrlController {
 					AnalyticsConnection.recordShorten(accountType);
 				});
 
-				Jedis jedis = jedisPool.getResource();
-
+				Jedis jedis = RedisConnection.get();
 				if (jedis != null) {
 					Long curCacheSize = jedis.dbSize();
 					if(curCacheSize >= cacheSize){
@@ -100,8 +97,8 @@ public class UrlController {
 						jedis.del(keyToBeDeleted);
 					}
 					jedis.set(key, originalUrl);
-					jedis.close();
 				}
+				RedisConnection.release(jedis);
 
 				return new ResponseEntity<>(new ShortenResult(key, originalUrl, String.valueOf(expireDate)), HttpStatus.CREATED);
 			} else {
@@ -116,7 +113,7 @@ public class UrlController {
 	public ResponseEntity<Object> redirect(@PathVariable String key, HttpServletRequest request) throws URISyntaxException {
 		String url = null;
 
-		Jedis jedis = jedisPool.getResource();
+		Jedis jedis = RedisConnection.get();
 
 		if (jedis != null) {
 			url = jedis.get(key);
@@ -128,10 +125,10 @@ public class UrlController {
 			if (result == null) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
-
 			if (String.valueOf(result.get("disabled")).equals("1")) {
-				url = String.valueOf(result.get("url"));
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
+			url = String.valueOf(result.get("url"));
 			
 			if (jedis != null) {
 				Long curCacheSize = jedis.dbSize();
@@ -143,9 +140,7 @@ public class UrlController {
 			}
 		}
 
-		if (jedis != null) {
-			jedis.close();
-		}
+		RedisConnection.release(jedis);
 
 		ReadableUserAgent agent = parser.parse(request.getHeader("User-Agent"));
 		String ipAddress = IpToRegionConnection.getIpAddress(request);
