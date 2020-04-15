@@ -8,4 +8,4 @@ locust
 ## Deploy
 *Automatic on push to `master` branch*
 
-Remote URL: http://bamss-tests.herokuapp.com
+Remote URL: https://bamss-tests.herokuapp.com
