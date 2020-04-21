@@ -11,7 +11,7 @@ import Col from 'react-bootstrap/Col';
 function PricingPage () {
     return (<Fragment>
         <h1>Pricing Plan </h1>
-        <CardDeck>
+        <CardDeck style={{color: "black", width: "80%", fontSize: "80%"}}>
             <Card>
                 <Card.Header>FREE</Card.Header>
                 <Card.Body>
@@ -25,15 +25,15 @@ function PricingPage () {
 
                         <ListGroupItem>
                             <Row>
-                                <Col>Daily Shorten Limit</Col>
+                                <Col>Daily Shortens</Col>
                                 <Col>15 URLs</Col>
                             </Row>
                         </ListGroupItem>
 
                         <ListGroupItem>
                             <Row>
-                                <Col>Max Expiration Period</Col>
-                                <Col>2 Months</Col>
+                                <Col>Max URL Expiration</Col>
+                                <Col>2 months</Col>
                             </Row>
                         </ListGroupItem>
 
@@ -45,7 +45,6 @@ function PricingPage () {
                         </ListGroupItem>
                     </ListGroup>
                     <br></br>
-                    <Button variant="primary">Purchase</Button>
 
                 </Card.Body>
             </Card>
@@ -62,15 +61,15 @@ function PricingPage () {
 
                         <ListGroupItem>
                             <Row>
-                                <Col>Daily Shorten Limit</Col>
+                                <Col>Daily Shortens</Col>
                                 <Col>100 URLs</Col>
                             </Row>
                         </ListGroupItem>
 
                         <ListGroupItem>
                             <Row>
-                                <Col>Max Expiration Period</Col>
-                                <Col>6 Months</Col>
+                                <Col>Max URL Expiration</Col>
+                                <Col>6 months</Col>
                             </Row>
                         </ListGroupItem>
                         <ListGroupItem>
@@ -84,6 +83,9 @@ function PricingPage () {
                     <Button variant="primary">Purchase</Button>
                 </Card.Body>
             </Card>
+        </CardDeck>
+        <br/>
+        <CardDeck style={{color: "black", width: "80%", fontSize: "80%"}}>
             <Card>
                 <Card.Header>BUSINESS</Card.Header>
                 <Card.Body>
@@ -96,14 +98,14 @@ function PricingPage () {
                         </ListGroupItem>
                         <ListGroupItem>
                             <Row>
-                                <Col>Daily Shorten Limit</Col>
+                                <Col>Daily Shortens</Col>
                                 <Col>1000 URLs</Col>
                             </Row>
                         </ListGroupItem>
                         <ListGroupItem>
                             <Row>
-                                <Col>Max Expiration Period</Col>
-                                <Col>12 Months</Col>
+                                <Col>Max URL Expiration</Col>
+                                <Col>12 months</Col>
                             </Row>
                         </ListGroupItem>
                         <ListGroupItem>
@@ -129,20 +131,20 @@ function PricingPage () {
                         </ListGroupItem>
                         <ListGroupItem>
                             <Row>
-                                <Col>Daily Shorten Limit</Col>
-                                <Col> - </Col>
+                                <Col>Daily Shortens</Col>
+                                <Col> unlimited </Col>
                             </Row>
                         </ListGroupItem>
                         <ListGroupItem>
                             <Row>
-                                <Col>Max Expiration Period</Col>
-                                <Col>24 Months</Col>
+                                <Col>Max URL Expiration</Col>
+                                <Col>24 months</Col>
                             </Row>
                         </ListGroupItem>
                         <ListGroupItem>
                             <Row>
                                 <Col>Monthly Price</Col>
-                                <Col>$0.01/URL ($50 Minimum)</Col>
+                                <Col>$0.01/URL<br/><i>Min $50</i></Col>
                             </Row>
                         </ListGroupItem>
                     </ListGroup>
@@ -150,9 +152,8 @@ function PricingPage () {
                     <Button variant="primary">Purchase</Button>
                 </Card.Body>
             </Card>
-
-
         </CardDeck>
+        <br/>
 
     </Fragment>);
 }
