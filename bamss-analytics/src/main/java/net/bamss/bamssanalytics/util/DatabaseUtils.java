@@ -146,7 +146,7 @@ public class DatabaseUtils {
   }
 
   private static int getEventsLength(long startDateTs, long endDateTs, long resolution) {
-    return (int) Math.ceil((double) (endDateTs - startDateTs) / resolution) + 1;
+    return (int) Math.ceil((double) (endDateTs - startDateTs) / resolution) + 2;
   }
 
   private static int getEventIndex(Timestamp eventDate, long startDateTs, long resolution) {
