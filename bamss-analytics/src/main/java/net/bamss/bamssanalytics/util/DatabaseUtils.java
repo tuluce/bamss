@@ -68,7 +68,7 @@ public class DatabaseUtils {
   private static String formatDate(long dateTs) {
     Calendar cal = Calendar.getInstance();
     cal.setTimeInMillis(dateTs);
-    cal.setTimeZone(TimeZone.getTimeZone("GMT+3"));
+    cal.setTimeZone(TimeZone.getTimeZone("GMT+3:00"));
     Date date = cal.getTime();
     String pattern = "yyyy-MM-dd HH:mm:ss";
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
