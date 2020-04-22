@@ -66,9 +66,11 @@ public class DatabaseUtils {
   }
 
   private static String formatDate(long dateTs) {
+    long THREE_HOURS = 10800000L;
+    dateTs += THREE_HOURS; // Temporary workound due to broken timezones
     Calendar cal = Calendar.getInstance();
     cal.setTimeInMillis(dateTs);
-    cal.setTimeZone(TimeZone.getTimeZone("GMT+3:00"));
+    // cal.setTimeZone(TimeZone.getTimeZone("Europe/Istanbul"));
     Date date = cal.getTime();
     String pattern = "yyyy-MM-dd HH:mm:ss";
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -108,9 +110,6 @@ public class DatabaseUtils {
       String endDate = formatDate(endDateTs);
       Statement st = db.createStatement();
       ResultSet rs = st.executeQuery("SELECT * FROM events WHERE "
-        + String.format("event_date BETWEEN '%s' AND '%s'", startDate, endDate)
-      );
-      System.out.println("SELECT * FROM events WHERE "
         + String.format("event_date BETWEEN '%s' AND '%s'", startDate, endDate)
       );
       int eventsLength = getEventsLength(startDateTs, endDateTs, resolution);
