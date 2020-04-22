@@ -30,6 +30,9 @@ public class AdminAnalytics {
       eventMap.put(accountType, counts);
     }
     List<Integer> counts = eventMap.get(accountType);
+    if (eventIndex > counts.size()) {
+      eventIndex = counts.size() - 1;
+    }
     counts.set(eventIndex, counts.get(eventIndex) + 1);
   }
 
