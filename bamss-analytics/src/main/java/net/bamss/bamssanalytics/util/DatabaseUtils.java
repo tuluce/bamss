@@ -1,12 +1,14 @@
 package net.bamss.bamssanalytics.util;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import net.bamss.bamssanalytics.connections.PostgreConnection;
 import net.bamss.bamssanalytics.models.AdminAnalytics;
@@ -64,8 +66,10 @@ public class DatabaseUtils {
   }
 
   private static String formatDate(long dateTs) {
-    Timestamp timestamp = new Timestamp(dateTs);  
-    Date date = new Date(timestamp.getTime());  
+    Calendar cal = Calendar.getInstance();
+    cal.setTimeInMillis(dateTs);
+    cal.setTimeZone(TimeZone.getTimeZone("GMT+3"));
+    Date date = cal.getTime();
     String pattern = "yyyy-MM-dd HH:mm:ss";
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
     String dateString = simpleDateFormat.format(date);
@@ -114,6 +118,7 @@ public class DatabaseUtils {
         Timestamp eventDate = rs.getTimestamp("event_date");
         int eventIndex = getEventIndex(eventDate, startDateTs, resolution);
         analytics.addAnalytic(eventType, accountType, eventIndex);
+        System.out.println(eventType);
       }
       rs.close();
       st.close();

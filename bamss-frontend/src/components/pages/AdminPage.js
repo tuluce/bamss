@@ -78,13 +78,14 @@ export default class AdminPage extends Component {
   }
 
   formatTs(timestamp) {
-    const day = ("" + new Date(timestamp)).substr(4, 6);
+    const day = ("" + new Date(timestamp)).substr(8, 2);
+    const month = ("" + new Date(timestamp)).substr(4, 3);
     const time = ("" + new Date(timestamp)).substr(16, 5);
-    return day + " " + time;
+    return day + " " + month + " " + time;
   }
 
   mergeData(data) {
-    if (!data.standard && !data.business) {
+    if (!data || (!data.standard && !data.business)) {
       return [];
     }
     if (!data.standard) {
