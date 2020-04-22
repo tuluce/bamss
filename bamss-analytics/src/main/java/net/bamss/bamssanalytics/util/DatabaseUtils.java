@@ -110,6 +110,9 @@ public class DatabaseUtils {
       ResultSet rs = st.executeQuery("SELECT * FROM events WHERE "
         + String.format("event_date BETWEEN '%s' AND '%s'", startDate, endDate)
       );
+      System.out.println("SELECT * FROM events WHERE "
+        + String.format("event_date BETWEEN '%s' AND '%s'", startDate, endDate)
+      );
       int eventsLength = getEventsLength(startDateTs, endDateTs, resolution);
       AdminAnalytics analytics = new AdminAnalytics(eventsLength);
       while (rs.next()) {
@@ -118,7 +121,6 @@ public class DatabaseUtils {
         Timestamp eventDate = rs.getTimestamp("event_date");
         int eventIndex = getEventIndex(eventDate, startDateTs, resolution);
         analytics.addAnalytic(eventType, accountType, eventIndex);
-        System.out.println(eventType);
       }
       rs.close();
       st.close();
