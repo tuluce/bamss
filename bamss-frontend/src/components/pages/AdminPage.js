@@ -30,7 +30,7 @@ export default class AdminPage extends Component {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="time" />
           <YAxis />
-          <Tooltip />
+          <Tooltip wrapperStyle={{color: "black"}}/>
           <Legend />
           {line1}
           {line2}
@@ -94,19 +94,31 @@ export default class AdminPage extends Component {
     if (!data.business) {
       data.business = data.standard.map(d => 0);
     }
-    const mergedData = data.standard.map((c, i) => ({
-      time: this.formatTs(start_date + resolution * i),
-      standard: data.standard[i],
-      business: data.business[i]
-    }));
+    const mergedData = data.standard.map((c, i) => {
+      let formattedDate = "";
+      if (data.standard[i] || data.business[i]) {
+        formattedDate = this.formatTs(start_date + resolution * i)
+      }
+      return {
+        time: formattedDate,
+        standard: data.standard[i],
+        business: data.business[i]
+      }
+    });
     return this.processDoubleData(mergedData);
   }
 
   getVisuals(analyticsData) {
-    const rawRedirectData = analyticsData.redirect.total.map((count, i) => ({
-      time: this.formatTs(start_date + resolution * i),
-      hits: count
-    }));
+    const rawRedirectData = analyticsData.redirect.total.map((count, i) => {
+      let formattedDate = "";
+      if (count) {
+        formattedDate = this.formatTs(start_date + resolution * i)
+      }
+      return {
+        time: formattedDate,
+        hits: count
+      }
+    });
     const redirectData = this.processSingleData(rawRedirectData);
 
     const shortenData = this.mergeData(analyticsData.shorten);
