@@ -53,7 +53,7 @@ export default class SignupPage extends Component {
         <Form.Group>
           <Form.Label>Account Type</Form.Label>
           <br/>
-          <Form.Check inline label='standard' type='radio' name='account_type' id='standard' checked/>
+          <Form.Check inline label='Standard' type='radio' name='account_type' id='standard' checked/>
           <Form.Check inline label='Business' type='radio' name='account_type' id='business'/>
         </Form.Group>
         <div id='message'>{this.state.message}</div>

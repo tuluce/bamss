@@ -11,9 +11,9 @@ class UrlCard extends Component {
     return (
       <div style={{width: 300, float: 'left'}}>
         <b>{title}</b>
-        <PieChart width={280} height={200}>
+        <PieChart width={280} height={240}>
           <Pie dataKey="value" data={data}
-            cx={140} cy={100} innerRadius={60} outerRadius={80} paddingAngle={5}
+            cx={140} cy={120} innerRadius={60} outerRadius={80} paddingAngle={5}
             fill="black" label />
           <Tooltip />
         </PieChart>
