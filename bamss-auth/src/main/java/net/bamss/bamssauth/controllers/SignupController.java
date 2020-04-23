@@ -52,6 +52,10 @@ public class SignupController {
 			return new ResponseEntity<>(new Signup("Email length should be in range [8 - 512]."), 
 				HttpStatus.BAD_REQUEST);
 		}
+		if (!"standard".equals(accountType) && !"business".equals(accountType)) {
+			return new ResponseEntity<>(new Signup("Invalid account type."), 
+				HttpStatus.BAD_REQUEST);
+		}
 		Document newUser = new Document()
 			.append("email", email)
 			.append("username", username)
